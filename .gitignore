@@ -9,11 +9,8 @@ umd
 # examples/
 # packages/
 # public/
-# vitepress .cache .temp dist
-docs/.vitepress/.temp
-docs/.vitepress/cache
-docs/.vitepress/cache/deps/
-docs/.vitepress/dist
+/types/auto-imports.d.ts
+/types/components.d.ts
 
 # local env files
 .env.local

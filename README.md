@@ -1,3 +1,46 @@
+# ui
+
+## 介绍
+
+> 基于 vue3+ ts+ Element-plus 二次封装组件
+
+
+## npm 方式安装使用
+
+```shell
+pnpm i @wocwin/t-ui-plus
+```
+
+## Volar 组件类型提示
+
+```js
+// 需要在使用的项目的tsconfig.json文件中添加以下
+compilerOptions：{
+  "types": [
+      "advint-ui-plus/global.d.ts",
+    ],
+}
+
+```
+
+## 安装依赖
+> ### 注意: 本地环境版本最好安装 [Node.js 16.x+](https://nodejs.org/en)、[pnpm 7.x+](https://github.com/pnpm/pnpm/)
+
+```shell
+npm install -g pnpm
+
+pnpm install
+
+```
+
+## 本地运行 vuepress 中组件文档
+
+```shell
+// docs项目(文档demo示例)基于vue3+vite项目
+npm run docs:dev
+
+```
+
 ## Git 提交规范
 
 - `ci`: ci 配置文件和脚本的变动;

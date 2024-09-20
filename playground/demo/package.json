@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "@adv/components": "workspace:^"
+  },
+  "devDependencies": {
+    "@adv/vite-config": "workspace:^"
   }
 }

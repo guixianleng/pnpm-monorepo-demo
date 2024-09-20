@@ -37,7 +37,7 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
       resolve: {
         // 配置项目别名
         alias: {
-          '~': resolve(__dirname, 'packages'),
+          '~': pathResolve('packages'),
         },
         // 类型： string[] 导入时想要省略的扩展名列表。
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs'],
@@ -59,7 +59,7 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
           },
         },
         lib: {
-          entry: './packages/index.ts',
+          entry: pathResolve('packages') + '/index.ts',
           name: 'AdvintUserSys',
           fileName: 'advint-user-sys',
         },

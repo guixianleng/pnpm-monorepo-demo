@@ -1,10 +1,12 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineApplicationConfig } from '@adv/vite-config';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue()],
-  server: {
-    port: 5173
+export default defineApplicationConfig({
+  overrides: {
+    server: {
+      host: '0.0.0.0',
+      port: 5173,
+      open: true,
+      https: false,
+    },
   }
 })

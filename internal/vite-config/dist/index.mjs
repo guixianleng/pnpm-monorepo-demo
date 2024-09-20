@@ -10,4 +10,3 @@ const _module = jiti(null, {
 })("D:/Workspace/Project/my-local-demo/admin-ui/internal/vite-config/src/index.ts");
 
 export const defineApplicationConfig = _module.defineApplicationConfig;
-export const definePackageConfig = _module.definePackageConfig;
