@@ -1,0 +1,36 @@
+{
+  "name": "@adv/vite-config",
+  "private": true,
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "LenGxin",
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "pnpm rimraf .turbo node_modules dist",
+    "lint": "pnpm eslint .",
+    "stub": "pnpm unbuild --stub"
+  },
+  "devDependencies": {
+    "dayjs": "^1.11.13",
+    "pkg-types": "^1.2.0",
+    "rollup-plugin-visualizer": "^5.8.2",
+    "vite": "^5.4.6",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-dts": "^4.2.1",
+    "vite-plugin-vue-setup-extend": "^0.4.0"
+  }
+}

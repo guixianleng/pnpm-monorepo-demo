@@ -1,0 +1,70 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "extends": ["eslint:recommended", "plugin:prettier/recommended"]
+    },
+    {
+      "files": ["*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
+      ],
+      "globals": {
+        "Recordable": "readonly",
+        "PromiseFn": "readonly",
+        "Nullable": "readonly",
+        "Fn": "readonly",
+        "ElRef": "readonly",
+        "TimeoutHandle": "readonly"
+      }
+    },
+    {
+      "files": ["*.vue", "*.jsx", "*.ts", "*.tsx"],
+      "parser": "vue-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "allowImportExportEverywhere": true,
+        "ecmaFeatures": {
+          "jsx": true
+        },
+        "project": ["./tsconfig.json", "./vite-config.mts"],
+        "extraFileExtensions": [".vue"],
+        "@typescript-eslint/ban-ts-comment": "off"
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:vue/vue3-recommended",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "vue/no-template-shadow": "off",
+        "vue/multi-word-component-names": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
+      },
+      "globals": {
+        "Recordable": "readonly",
+        "PromiseFn": "readonly",
+        "Nullable": "readonly",
+        "Fn": "readonly",
+        "ElRef": "readonly",
+        "TimeoutHandle": "readonly"
+      }
+    }
+  ]
+}
