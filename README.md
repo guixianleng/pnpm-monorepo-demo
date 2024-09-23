@@ -8,7 +8,7 @@
 ## npm 方式安装使用
 
 ```shell
-pnpm i advint-ui
+pnpm i adv-ui
 ```
 
 ## Volar 组件类型提示
@@ -17,7 +17,7 @@ pnpm i advint-ui
 // 需要在使用的项目的tsconfig.json文件中添加以下
 compilerOptions：{
   "types": [
-      "advint-ui/global.d.ts",
+      "adv-ui/global.d.ts",
     ],
 }
 
