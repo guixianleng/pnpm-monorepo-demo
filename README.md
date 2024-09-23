@@ -1,4 +1,4 @@
-# ui
+# 组件库
 
 ## 介绍
 
@@ -8,7 +8,7 @@
 ## npm 方式安装使用
 
 ```shell
-pnpm i @wocwin/t-ui-plus
+pnpm i advint-ui
 ```
 
 ## Volar 组件类型提示
@@ -17,7 +17,7 @@ pnpm i @wocwin/t-ui-plus
 // 需要在使用的项目的tsconfig.json文件中添加以下
 compilerOptions：{
   "types": [
-      "advint-ui-plus/global.d.ts",
+      "advint-ui/global.d.ts",
     ],
 }
 

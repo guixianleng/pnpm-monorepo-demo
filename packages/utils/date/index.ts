@@ -1,4 +1,4 @@
-import { isDate } from '../is'
+import { isDate } from "../is"
 
 /**
  * @description 日期的月或日补零操作
@@ -17,16 +17,16 @@ function convertToDate(date: string | number) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     time = new Date(date * 1000)
-  } else if (typeof date === 'string' && /^\d+$/.test(date.trim())) {
+  } else if (typeof date === "string" && /^\d+$/.test(date.trim())) {
     // 若用户传入字符串格式时间戳，new Date无法解析，需做兼容
     time = new Date(Number(date))
   } else {
-    time = new Date(typeof date === 'string' ? date.replace(/-/g, '/') : date)
+    time = new Date(typeof date === "string" ? date.replace(/-/g, "/") : date)
   }
   return time
 }
 
-type FormatOptions = 'YYYY' | 'MM' | 'DD' | 'HH' | 'hh' | 'mm' | 'ss' | 'A' | 'a' | 'h' | 'm' | 's'
+type FormatOptions = "YYYY" | "MM" | "DD" | "HH" | "hh" | "mm" | "ss" | "A" | "a" | "h" | "m" | "s"
 
 /**
  * 时间格式化
@@ -34,7 +34,7 @@ type FormatOptions = 'YYYY' | 'MM' | 'DD' | 'HH' | 'hh' | 'mm' | 'ss' | 'A' | 'a
  * @param format[string] 格式化规则 YYYY:MM:DD|YYYY:MM|YYYY年MM月DD日，可自定义组合 默认YYYY-MM-DD
  * @returns
  */
-export function formatDate(dateTime: string | number, format = 'YYYY-MM-DD'): string {
+export function formatDate(dateTime: string | number, format = "YYYY-MM-DD"): string {
   let date
   // 若传入时间为假值，则取当前时间
   if (!dateTime) {
@@ -54,8 +54,8 @@ export function formatDate(dateTime: string | number, format = 'YYYY-MM-DD'): st
     h: String(((date.getHours() + 11) % 12) + 1),
     m: date.getMinutes(),
     s: date.getSeconds(),
-    A: date.getHours() >= 12 ? 'PM' : 'AM',
-    a: date.getHours() >= 12 ? 'pm' : 'am',
+    A: date.getHours() >= 12 ? "PM" : "AM",
+    a: date.getHours() >= 12 ? "pm" : "am"
   }
 
   return format.replace(
