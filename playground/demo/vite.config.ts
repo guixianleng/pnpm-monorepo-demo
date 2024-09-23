@@ -8,5 +8,11 @@ export default defineApplicationConfig({
       open: true,
       https: false,
     },
+    resolve: {
+      // 配置路径别名
+      alias: {
+        '#': path.resolve(__dirname, '../../packages')
+      },
+    }
   }
 })

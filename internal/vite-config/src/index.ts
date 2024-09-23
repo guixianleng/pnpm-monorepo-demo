@@ -1,2 +1,2 @@
 export * from './config/application';
-// export * from './config/pkg';
+export * from './config/package';

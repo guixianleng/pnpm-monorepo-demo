@@ -1,0 +1,45 @@
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.add-minus {
+  width: 100%;
+  &--item {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+    align-items: center;
+    &-top {
+      // flex: 1;
+    }
+    .icons {
+      display: flex;
+      align-items: center;
+      margin-left: 16px;
+      cursor: pointer;
+      vertical-align: middle;
+
+      .add {
+        margin-right: 6px;
+      }
+    }
+  }
+
+  .el-form-item {
+    margin-bottom: 18px !important;
+    .el-input {
+      width: 100% !important;
+    }
+  }
+
+  .disabled {
+    cursor: not-allowed;
+  }
+}

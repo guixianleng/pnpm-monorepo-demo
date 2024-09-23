@@ -1,1 +1,1 @@
-export * from "D:/Workspace/Project/my-local-demo/admin-ui/internal/vite-config/src/index";
+export * from "D:/Workspace/Project/my-local-demo/pnpm-monorepo-demo/internal/vite-config/src/index";

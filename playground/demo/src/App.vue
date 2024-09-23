@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import { TButton } from '@adv/components'
-</script>
-
 <template>
   <div>
     <a href="https://vitejs.dev" target="_blank">
@@ -12,9 +7,65 @@ import { TButton } from '@adv/components'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
-  <TButton>按钮</TButton>
+  <adv-layout-page class="t_button_demo">
+    <adv-layout-page-item>
+      <div style="display: flex; align-items: center">
+        <div style="width: 140px; font-weight: 700">输入防抖时间：</div>
+        <el-input-number
+          style="width: 240px"
+          v-model="time"
+          placeholder="请输入防抖时间（毫秒）"
+          :min="1000"
+          :max="10000"
+          :controls="false"
+        />
+      </div>
+      <adv-button style="margin-top: 15px" color="#626aef" :delay="time" @click="exportExcel">导出</adv-button>
+    </adv-layout-page-item>
+  </adv-layout-page>
+
+  <adv-checkbox-group v-model="checked" :options="options"></adv-checkbox-group>
+  <adv-count-to :start-val="1" :end-val="4389.23" :duration="1000" />
+  <adv-add-minus v-model="addPlus">
+    <template #default="{ row }">
+      <el-input v-model="row.name" style="width: 280px"></el-input>
+    </template>
+  </adv-add-minus>
 </template>
+
+<script setup lang="ts">
+import { 
+  AdvLayoutPage,
+  AdvLayoutPageItem,
+  AdvButton,
+  AdvAddMinus,
+  AdvCheckboxGroup,
+  AdvCountTo
+} from '@adv/components'
+
+const options = [
+  {
+    label: '数组数据',
+    value: 'array',
+  },
+  {
+    label: '字符串数据',
+    value: 'string',
+  },
+]
+
+const addPlus = ref<any[]>([{}]);
+const checked = ref<string[]>([])
+
+const time = ref(1000)
+const exportExcel = () => {
+  console.log("点击事件")
+  ElMessage({
+    message: "点击事件",
+    type: "success"
+  })
+}
+</script>
 
 <style scoped>
 .logo {
@@ -22,11 +73,5 @@ import { TButton } from '@adv/components'
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>

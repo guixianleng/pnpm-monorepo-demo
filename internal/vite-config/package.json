@@ -2,7 +2,6 @@
   "name": "@adv/vite-config",
   "private": true,
   "version": "1.0.0",
-  "keywords": [],
   "author": "LenGxin",
   "license": "ISC",
   "type": "module",

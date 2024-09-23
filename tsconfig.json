@@ -7,32 +7,24 @@
     "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
-    "types": [
-      "vite/client",
-      "element-plus/global"
-    ],
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "skipLibCheck": true,
     "baseUrl": "./",
+    "lib": ["ESNext", "DOM"],
     "paths": {
-      "~": [
-        "packages"
-      ],
-      "@vue/shared": [
-        "./node_modules/@vue/shared"
-      ],
-      "~/*": [
-        "packages/*"
-      ]
+      "#": ["packages"],
+      "@vue/shared": ["./node_modules/@vue/shared"],
+      "#/*": ["packages/*"]
     },
-    "skipLibCheck": true
+    "types": [
+      "vite/client",
+      "element-plus/global",
+      "node"
+    ]
   },
   "include": [
     "packages/**/*.ts",
