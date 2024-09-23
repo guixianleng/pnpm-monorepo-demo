@@ -5,6 +5,7 @@ lib
 umd
 .turbo
 docs/.vitepress/cache
+docs/.vitepress/dist
 
 # 忽略目录
 # examples/

@@ -6,7 +6,8 @@
   "license": "ISC",
   "scripts": {
     "dev": "vitepress dev .",
-    "build": "vitepress build ."
+    "build": "vitepress build .",
+    "preview": "vitepress preview ."
   },
   "devDependencies": {
     "@vitejs/plugin-vue-jsx": "^4.0.1",

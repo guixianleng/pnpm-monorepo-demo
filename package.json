@@ -36,7 +36,8 @@
     "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "docs:prettier": "prettier --write \"docs/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",
     "docs:dev": "pnpm run -C docs dev",
-    "docs:build": "pnpm run -C docs build"
+    "docs:build": "pnpm run -C docs build",
+    "docs:preview": "pnpm run -C docs preview"
   },
   "dependencies": {
     "lodash-es": "^4.17.21"
