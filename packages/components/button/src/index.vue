@@ -1,5 +1,5 @@
 <template>
-  <el-tooltip v-if="showTooltip" v-bind="tipProps">
+  <el-tooltip v-if="showTooltip" v-bind="tooltipProps">
     <el-button v-bind="$attrs" class="adv-button-tip" @click="handleClick">
       <slot />
     </el-button>
@@ -10,16 +10,26 @@
 </template>
 
 <script setup lang="ts" name="AdvButton">
-import { ref, PropType, useAttrs, computed } from "vue"
+import { ref, unref, PropType, useAttrs, computed } from "vue"
+import { omit } from "lodash-es"
+import type { Placement } from "element-plus/es/components/popper"
 import type { ElTooltipProps } from "element-plus/es/components/tooltip"
 import { ElButton, ElTooltip } from "element-plus"
 
 const props = defineProps({
+  tip: {
+    type: String,
+    default: ""
+  },
+  placement: {
+    type: String as PropType<Placement>,
+    default: "top"
+  },
   tipProps: {
     type: Object as PropType<ElTooltipProps>,
     default: () => ({})
   },
-  isDebounce: {
+  debounce: {
     type: Boolean,
     default: true
   },
@@ -37,11 +47,22 @@ const getBindValue = computed(() => {
   return { ...attrs }
 })
 
-const showTooltip = computed(() => !!props.tipProps?.content)
+const showTooltip = computed(() => !!unref(tooltipProps).content)
+
+const tooltipProps = computed((): ElTooltipProps => {
+  const { tip, placement, tipProps } = props
+  const toolProps = omit(tipProps, ["placement", "content"])
+  // @ts-ignore
+  return {
+    ...toolProps,
+    content: tip,
+    placement
+  }
+})
 
 const handleClick = () => {
-  const { isDebounce, delay } = props
-  if (!isDebounce) return emits("click")
+  const { debounce, delay } = props
+  if (!debounce) return emits("click")
   const newTime = new Date()
   if (newTime.getTime() - record.value > delay) {
     emits("click")

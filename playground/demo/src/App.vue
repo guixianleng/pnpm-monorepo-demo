@@ -24,7 +24,7 @@
           :max="10000"
           :controls="false"
         />
-        <adv-button style="margin-left: 15px" color="#626aef" :delay="time" @click="exportExcel">测试防抖间隔</adv-button>
+        <adv-button style="margin-left: 15px" color="#626aef" :delay="time" @click="exportExcel">测试防抖</adv-button>
       </div>
     </adv-layout-page-item>
     <adv-layout-page-item>

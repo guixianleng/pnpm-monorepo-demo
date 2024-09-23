@@ -4,6 +4,7 @@ node_modules
 lib
 umd
 .turbo
+docs/.vitepress/cache
 
 # 忽略目录
 # examples/

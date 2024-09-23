@@ -1,6 +1,6 @@
 import Button from "./src/index.vue"
 import { withInstall } from "@adv/utils"
 
-const TButton = withInstall(Button)
+const AdvButton = withInstall(Button)
 
-export default TButton
+export default AdvButton
