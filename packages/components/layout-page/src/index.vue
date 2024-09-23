@@ -3,11 +3,11 @@
     ref="LayoutPageRef"
     class="adv-layout_page"
     :class="{ 'layout-page_no_margin': noMargin }"
-    @scroll="(e: any) => (scrollTop = e.target.scrollTop)"
+    @scroll="handleScroll"
   >
     <slot />
     <div v-if="backtop" class="back_to_top">
-      <div v-if="isShowGoTopButton" @click="backToTop">
+      <div v-if="ShowBackTop" @click="backToTop">
         <el-icon v-bind="{ size: 24, ...$attrs }"><CaretTop /></el-icon>
       </div>
     </div>
@@ -15,6 +15,7 @@
 </template>
 <script setup lang="ts" name="AdvLayoutPage">
 import { onActivated, onMounted, ref, watch } from "vue"
+import { CaretTop } from "@element-plus/icons-vue"
 
 const props = defineProps({
   scrollDisabled: {
@@ -36,7 +37,7 @@ const props = defineProps({
     default: 100
   }
 })
-const isShowGoTopButton = ref<boolean>(false)
+const ShowBackTop = ref<boolean>(false)
 const LayoutPageRef = ref<any>(null)
 const scrollTop = ref<number>(0)
 
@@ -44,12 +45,16 @@ watch(
   () => scrollTop.value,
   newVal => {
     if (newVal > props.scrollToTop) {
-      isShowGoTopButton.value = true
+      ShowBackTop.value = true
     } else {
-      isShowGoTopButton.value = false
+      ShowBackTop.value = false
     }
   }
 )
+
+const handleScroll = (e: any) => {
+  scrollTop.value = e.target.scrollTop
+}
 
 const backToTop = () => {
   scrollTop.value = 0
@@ -84,6 +89,7 @@ onActivated(() => {
   width: 100%;
   height: 100%;
   overflow: auto;
+  position: relative;
   .back_to_top {
     position: fixed;
     right: 10px;
