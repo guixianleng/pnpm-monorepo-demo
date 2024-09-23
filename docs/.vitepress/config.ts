@@ -5,11 +5,11 @@ export default defineConfig({
   title: "TuiPlus基础组件文档",
   description: "基于Element-plus基础组件封装使用",
   lang: "cn-ZH",
-  base: "/advint-ui-plus/",
+  base: "/adv-ui-plus/",
   lastUpdated: true,
   themeConfig: {
     logo: "/vite.svg",
-    siteTitle: "AdvuiPlus基础组件文档",
+    siteTitle: "组件库文档",
     outline: 3,
     socialLinks: [{ icon: "github", link: "https://github.com/wocwin/t-ui-plus" }],
     nav: [
