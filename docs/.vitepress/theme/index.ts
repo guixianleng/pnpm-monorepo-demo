@@ -9,7 +9,7 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue"
 // 引入echarts
 import * as echarts from "echarts"
 // 基于element-plus二次封装基础组件
-import AdvUi from "adv-ui"
+import AdvUi from "@adv/components"
 
 import TVHtml from "../components/TVHtml.vue"
 import TIcon from "../components/TIcon.vue"

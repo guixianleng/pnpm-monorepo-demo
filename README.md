@@ -2,7 +2,7 @@
 
 ## 介绍
 
-> 基于 vue3+ ts+ Element-plus 二次封装组件
+> 基于 vue3 + ts+ Element-plus 二次封装组件
 
 
 ## npm 方式安装使用
@@ -17,7 +17,7 @@ pnpm i adv-ui
 // 需要在使用的项目的tsconfig.json文件中添加以下
 compilerOptions：{
   "types": [
-      "adv-ui/types/global.d.ts",
+      "adv-ui/lib/types/global.d.ts",
     ],
 }
 
@@ -33,7 +33,7 @@ pnpm install
 
 ```
 
-## 本地运行 vuepress 中组件文档
+## 本地运行 vitepress 中组件文档
 
 ```shell
 // docs项目(文档demo示例)基于vue3+vite项目
