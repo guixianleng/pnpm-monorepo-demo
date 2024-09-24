@@ -33,7 +33,7 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
     const pathResolve = (pathname: string) => resolve(root, '.', pathname);
     
     const applicationConfig: UserConfig = {
-      base: VITE_PUBLIC_PATH,
+      // base: VITE_PUBLIC_PATH,
       resolve: {
         // 配置项目别名
         alias: {

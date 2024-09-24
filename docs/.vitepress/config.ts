@@ -4,6 +4,9 @@ import { mdPlugin } from "./config/plugins"
 export default defineConfig({
   title: "TuiPlus基础组件文档",
   description: "基于Element-plus基础组件封装使用",
+  // head: [
+  //   ['link', { rel: 'icon', href: '/favicon.ico' }]
+  // ],
   lang: "cn-ZH",
   base: "/adv-ui-plus/",
   lastUpdated: true,

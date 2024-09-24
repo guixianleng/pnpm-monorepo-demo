@@ -22,7 +22,8 @@ async function createPlugins({ isBuild, compress, enableAnalyze }: Options) {
     vue(),
     vueJsx(),
     dts({
-      outDir: 'lib/types'
+      outDir: 'lib/types',
+      copyDtsFiles: true
     }),
     VueSetupExtend(),
     createAutoImport(),
