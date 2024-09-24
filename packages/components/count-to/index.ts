@@ -1,4 +1,4 @@
-import CountTo from "./src/count-to.vue"
+import CountTo from "./src/index.vue"
 import { withInstall } from "@adv/utils"
 
 const AdvCountTo = withInstall(CountTo)

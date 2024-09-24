@@ -17,7 +17,7 @@ pnpm i adv-ui
 // 需要在使用的项目的tsconfig.json文件中添加以下
 compilerOptions：{
   "types": [
-      "adv-ui/global.d.ts",
+      "adv-ui/types/global.d.ts",
     ],
 }
 

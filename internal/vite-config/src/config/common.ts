@@ -1,13 +1,12 @@
-import { type UserConfig } from 'vite';
+import type { UserConfig } from 'vite';
 
 const commonConfig: (mode: string) => UserConfig = (mode) => ({
   server: {
     host: true,
   },
-  esbuild: {
-    drop: mode === 'production' ? ['console', 'debugger'] : [],
-    // optionalChainingAssign: true,
-  },
+  // esbuild: {
+  //   drop: mode === 'production' ? ['console', 'debugger'] : []
+  // },
   build: {
     reportCompressedSize: false,
     chunkSizeWarningLimit: 1500,

@@ -16,9 +16,8 @@
     "baseUrl": "./",
     "lib": ["ESNext", "DOM"],
     "paths": {
-      "#": ["packages"],
-      "@vue/shared": ["./node_modules/@vue/shared"],
-      "#/*": ["packages/*"]
+      "#/*": ["packages/*"],
+      "@vue/shared": ["./node_modules/@vue/shared"]
     },
     "types": [
       "vite/client",

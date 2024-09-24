@@ -5,7 +5,7 @@
   "keywords": [],
   "author": "LenGxin",
   "license": "MIT",
-  "main": "./index.ts",
+  "main": "index.ts",
   "dependencies": {
     "@adv/utils": "workspace:^"
   }

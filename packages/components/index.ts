@@ -39,6 +39,11 @@ if (typeof window !== "undefined" && window.Vue) {
   install(window.Vue)
 }
 
+/**
+ * @description 公共方法
+ */
+export * from "@adv/utils"
+
 // 按需引入
 export {
   AdvLayoutPage,

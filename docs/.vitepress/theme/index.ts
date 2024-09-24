@@ -6,13 +6,15 @@ import "element-plus/theme-chalk/dark/css-vars.css"
 import locale from "element-plus/es/locale/lang/zh-cn"
 // 图标并进行全局注册
 import * as ElementPlusIconsVue from "@element-plus/icons-vue"
-import * as echarts from "echarts" // 引入echarts
+// 引入echarts
+import * as echarts from "echarts"
+// 基于element-plus二次封装基础组件
+import AdvUi from "adv-ui"
+
 import TVHtml from "../components/TVHtml.vue"
 import TIcon from "../components/TIcon.vue"
 import TTip from "../components/TTip.vue"
 import { VPDemo } from "../vitepress"
-// 基于element-plus二次封装基础组件
-import Advint from "@adv/components"
 import "../../public/css/index.css"
 
 export default {
@@ -29,7 +31,7 @@ export default {
       ctx.app.component(key, component)
     }
     // 全局注册基础组件
-    ctx.app.use(Advint)
+    ctx.app.use(AdvUi)
 
     ctx.app.component("Demo", VPDemo)
     ctx.app.component("TVHtml", TVHtml)

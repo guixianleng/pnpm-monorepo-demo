@@ -33,12 +33,8 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
     const pathResolve = (pathname: string) => resolve(root, '.', pathname);
     
     const applicationConfig: UserConfig = {
-      // base: VITE_PUBLIC_PATH,
+      base: VITE_PUBLIC_PATH,
       resolve: {
-        // 配置项目别名
-        alias: {
-          '#': pathResolve('packages'),
-        },
         // 类型： string[] 导入时想要省略的扩展名列表。
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs'],
       },
@@ -60,8 +56,20 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
         },
         lib: {
           entry: pathResolve('packages') + '/components/index.ts',
-          name: 'advint-ui',
-          fileName: 'advint-ui',
+          // name: 'adv-ui',
+          // fileName: 'adv-ui',
+          formats: ['es', 'cjs', 'iife'],
+          name: 'advUi',
+          fileName: format => {
+            const fileName = 'adv-ui'
+            if (format === 'es') {
+              return `${fileName}.esm.js`
+            }
+            if (format === 'iife') {
+              return `${fileName}.global.js`
+            }
+            return `${fileName}.${format}.js`
+          },
         },
       },
       plugins,

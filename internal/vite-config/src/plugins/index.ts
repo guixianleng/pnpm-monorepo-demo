@@ -23,12 +23,13 @@ async function createPlugins({ isBuild, compress, enableAnalyze }: Options) {
     vueJsx(),
     dts({
       outDir: 'lib/types',
-      copyDtsFiles: true
+      copyDtsFiles: true,
+      logLevel: 'error',
     }),
     VueSetupExtend(),
-    createAutoImport(),
-    createComponents(),
-    createIcons()
+    // createAutoImport(),
+    // createComponents(),
+    // createIcons()
   ];
 
   if (isBuild) {

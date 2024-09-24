@@ -1,4 +1,4 @@
-import CheckboxGroup from "./src/checkbox-group.vue"
+import CheckboxGroup from "./src/index.vue"
 import { withInstall } from "@adv/utils"
 
 const AdvCheckboxGroup = withInstall(CheckboxGroup)

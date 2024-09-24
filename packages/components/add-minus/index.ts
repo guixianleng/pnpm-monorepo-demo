@@ -1,4 +1,4 @@
-import AddMinus from "./src/add-minus.vue"
+import AddMinus from "./src/index.vue"
 import { withInstall } from "@adv/utils"
 
 const AdvAddMinus = withInstall(AddMinus)
