@@ -16,37 +16,49 @@
   ],
   "scripts": {
     "bootstrap": "pnpm install",
-    "dev-demo": "pnpm run -C playground/demo dev",
+    "dev-demo": "pnpm run -C play dev",
     "lib": "rimraf lib && vite build",
     "build:no-cache": "pnpm store prune && pnpm lib",
     "build:analyze": "pnpm vite build --mode analyze",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "turbo run stub",
-    "deploy": "deploy.sh",
     "pub": "npm publish --registry=https://registry.npmjs.org/",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
     "prettier": "prettier --write \"packages/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",
     "lint": "eslint --cache --max-warnings 0 \"packages/**/*.{vue,ts,tsx}\" --fix",
     "commit:check": "pnpm lint && vue-tsc --noEmit",
     "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && pnpm bootstrap",
-    "watch": "nodemon --ignore lib/ --ignore node_modules/ --watch packages/ -C -e ts,tsx,scss,less --debug -x \"pnpm lib && yalc push\"",
-    "docs:prettier": "prettier --write \"docs/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",
-    "docs:dev": "pnpm run -C docs dev",
-    "docs:build": "pnpm run -C docs build",
-    "docs:preview": "pnpm run -C docs preview"
+    "watch": "nodemon --ignore lib/ --ignore node_modules/ --watch packages/ -C -e ts,tsx,scss,less --debug -x \"pnpm lib && yalc push\""
   },
   "peerDependencies": {
     "vue": "^3.2.0"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@user-admin/api": "workspace:^",
+    "@user-admin/config": "workspace:^",
+    "@user-admin/directive": "workspace:^",
+    "@user-admin/hooks": "workspace:^",
+    "@user-admin/layout": "workspace:^",
+    "@user-admin/pages": "workspace:^",
+    "@user-admin/plugins": "workspace:^",
+    "@user-admin/router": "workspace:^",
+    "@user-admin/store": "workspace:^",
+    "@user-admin/utils": "workspace:^",
     "@vueuse/core": "^11.1.0",
+    "advint-ui": "^0.0.6",
+    "await-to-js": "^3.0.0",
     "axios": "^1.7.7",
     "co-utils-vue": "^2.5.1",
+    "crypto-js": "^4.2.0",
     "element-plus": "^2.8.3",
+    "js-base64": "^3.7.7",
+    "js-md5": "^0.8.3",
     "lodash-es": "^4.17.21",
     "pinia": "^2.2.2",
-    "qs": "^6.13.0"
+    "qs": "^6.13.0",
+    "vue-json-pretty": "^2.4.0",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@adv/vite-config": "workspace:^",
@@ -57,9 +69,11 @@
     "@types/path-browserify": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
+    "@user-admin/types": "workspace:^",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "@vue/shared": "^3.5.6",
+    "animate.css": "^4.1.1",
     "chalk": "^5.3.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -69,6 +83,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^9.28.0",
     "npm-run-all": "^4.1.5",
+    "nprogress": "^0.2.0",
     "path-browserify": "^1.0.1",
     "pinia-plugin-persistedstate": "^4.0.2",
     "prettier": "^3.3.3",
@@ -97,9 +112,5 @@
   "engines": {
     "node": ">=18.12.0",
     "pnpm": ">=9.0.2"
-  },
-  "gitHooks": {
-    "pre-commit": "pnpm commit:check",
-    "commit-msg": "node scripts/git-commit.js"
   }
 }

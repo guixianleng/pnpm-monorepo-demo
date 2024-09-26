@@ -3,10 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import dts from 'vite-plugin-dts'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-import createAutoImport from './auto-import'
-import createComponents from './components'
-import createIcons from './icons'
-// import ElementPlus from 'unplugin-element-plus/vite'
+// import ElementPlus from 'un../../../../play/vite/plugins/auto-importt-plus/vite'
 
 import { configCompressPlugin } from './compress';
 import { configVisualizerConfig } from './visualizer';
@@ -26,10 +23,7 @@ async function createPlugins({ isBuild, compress, enableAnalyze }: Options) {
       copyDtsFiles: true,
       logLevel: 'error',
     }),
-    VueSetupExtend(),
-    // createAutoImport(),
-    // createComponents(),
-    // createIcons()
+    VueSetupExtend()
   ];
 
   if (isBuild) {

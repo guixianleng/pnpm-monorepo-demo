@@ -1,5 +1,4 @@
 packages:
-  - playground/*
   - packages/*
   - internal/*
-  - docs
+  - play

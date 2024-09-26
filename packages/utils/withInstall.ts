@@ -9,8 +9,8 @@ export const withInstall = <T, E extends Record<string, any>>(main: T, extra?: E
     }
   }
   if (extra) {
-    for (const [key, comp] of Object.entries(extra)) {
-      ;(main as Record<string, any>)[key] = comp
+    for (const [compName, comp] of Object.entries(extra)) {
+      ;(main as Record<string, any>)[compName] = comp
     }
   }
   // 将 T 断言为具体的类型 T & plugin & Record<string, any>

@@ -1,0 +1,9 @@
+{
+  "name": "@user-admin/layout",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "author": "LenGxin",
+  "license": "ISC"
+  
+}

@@ -1,0 +1,137 @@
+<template>
+  <adv-page :content-style="{ marginTop: 0 }">
+    <adv-form-table
+      :column="DataColumns"
+      :row-key="() => 'deptId'"
+      :default-expand-all="true"
+      :tree-props="{ children: 'children' }"
+      @register="register"
+      @selection-change="handleSelectionChange"
+      @click-row-delete="handleDelete"
+      @click-row-edit="handleUpdate"
+    >
+      <template #toolbar>
+        <el-button v-hasPermi="permission.ADD" type="primary" icon="Plus" @click="handleAdd">
+          新增
+        </el-button>
+        <el-button
+          v-if="ids.length > 0"
+          v-hasPermi="permission.DELETE"
+          type="danger"
+          plain
+          icon="Delete"
+          @click="handleDelete()"
+        >
+          批量删除
+        </el-button>
+        <el-button v-hasPermi="permission.EXPORT" plain icon="Download" @click="handleExport">
+          导出
+        </el-button>
+      </template>
+      <template #deptStatus="{ row }">
+        <el-switch
+          v-model="row.deptStatus"
+          v-hasPermi="permission.EDIT"
+          :active-value="1"
+          :inactive-value="0"
+          @change="handleStatusChange(row)"
+        ></el-switch>
+      </template>
+    </adv-form-table>
+  </adv-page>
+</template>
+
+<script setup name="Dict" lang="ts">
+import { useMessageBox, AdvFormTable, useFormTable, useDialog, AdvPage } from "advint-ui"
+import { listDept, delDept, updateDept } from "@user-admin/api"
+import { handleTree } from "@user-admin/utils"
+import { h } from "vue"
+import ModifyDialog from "./components/ModifyDialog.vue"
+import { DataColumns, SearchSchemas } from "./enums/table.enum"
+import { DeptVO } from "../../../api/dept/types"
+import { permission } from "./permission/index"
+
+// 注册use-form
+const [register, { reload }] = useFormTable({
+  apiFunc: listDept,
+  formConfig: {
+    schemas: SearchSchemas,
+    baseColProps: {
+      span: 6
+    },
+    // 格式化需要的时间
+    fieldMapToTime: [["createTime", ["params.beginTime", "params.endTime"], "YYYY-MM-DD hh:mm:ss"]]
+  },
+  inPage: true,
+  afterFetch(data: any) {
+    return handleTree(data, "deptId")
+  }
+})
+
+const ids = ref<Array<number | string>>([])
+const editRow = ref()
+
+/** 新增按钮操作 */
+const handleAdd = async () => {
+  const formRef = ref()
+  useDialog({
+    title: "新增部门",
+    width: "600px",
+    contentRenderer: () => h(ModifyDialog, { ref: formRef }),
+    beforeSure: async () => await formRef.value.submitForm()
+  })
+}
+/** 多选框选中数据 */
+const handleSelectionChange = (selection: DeptVO[]) => {
+  ids.value = selection.map(item => item.deptId)
+}
+
+/** 修改按钮操作 */
+const handleUpdate = async (row?: DeptVO) => {
+  const formRef = ref()
+  editRow.value = row
+  useDialog({
+    title: "修改部门",
+    width: "600px",
+    contentRenderer: () =>
+      h(ModifyDialog, {
+        ref: formRef,
+        editData: editRow.value
+      }),
+    beforeSure: async () => await formRef.value.submitForm()
+  })
+}
+
+/** 部门状态修改 */
+const handleStatusChange = async (row: DeptVO) => {
+  let text = row.deptStatus === 1 ? "启用" : "停用"
+  const backStatus = row.deptStatus === 0 ? 1 : 0
+  try {
+    await useMessageBox({
+      tip: '确认要"' + text + '""' + row.deptName + '"部门吗?',
+      api: updateDept,
+      params: row,
+      successMsg: text + "成功",
+      callback: reload,
+      onCancel: () => (row.deptStatus = backStatus)
+    })
+  } catch {
+    row.deptStatus = backStatus
+  }
+}
+
+/** 删除按钮操作 */
+const handleDelete = async (row?: DeptVO) => {
+  const dictIds = row?.deptId || ids.value
+  await useMessageBox({
+    tip: "是否确认删除选中项？",
+    api: delDept,
+    params: dictIds,
+    successMsg: "删除成功",
+    callback: reload
+  })
+}
+
+/** 导出按钮操作 */
+const handleExport = () => {}
+</script>

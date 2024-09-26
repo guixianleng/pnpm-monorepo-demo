@@ -1,0 +1,22 @@
+/* 全局覆盖element-plus的样式变量 */
+:root {
+  --el-color-primary: #0073ff;
+  --el-color-primary-light-3: #9fc2ff;
+  --el-color-primary-dark-2: #2b5cc4;
+
+  --el-text-color-regular: #212529;
+  --el-color-danger: #f56c6c;
+
+  // 自定义
+  --adv-font-size: 14px;
+  --adv-title-font-size: 16px;
+  // 字体颜色、大小
+  --adv-text-color: rgb(51, 54, 57);
+  --adv-title-text-color: rgb(31, 34, 37);
+  --adv-title-font-weight: 500;
+  // 高度
+  --adv-line-height: 1.6;
+  --adv-border-radius: 4px;
+  // 动画
+  --adv-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+}

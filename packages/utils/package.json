@@ -1,9 +1,8 @@
 {
-  "name": "@adv/utils",
-  "private": true,
+  "name": "@user-admin/utils",
   "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
   "author": "LenGxin",
-  "license": "ISC",
-  "type": "module",
-  "main": "index.ts"
+  "license": "ISC"
 }
