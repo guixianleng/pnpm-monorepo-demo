@@ -39,6 +39,13 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs'],
       },
       define: defineData,
+      css: {
+        preprocessorOptions: {
+          scss: {
+            // 解决warning in Dart Sass 2.0.0
+            api: "modern-compiler",
+          }
+      }
       build: {
         outDir: 'lib',
         target: 'es2015',
@@ -55,10 +62,8 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
           },
         },
         lib: {
-          entry: pathResolve('packages') + '/components/index.ts',
-          // name: 'adv-ui',
-          // fileName: 'adv-ui',
-          formats: ['es', 'cjs', 'iife'],
+          entry: pathResolve('packages') + '/pages/index.ts',
+          formats: ['es', 'cjs'],
           name: 'advUi',
           fileName: format => {
             const fileName = 'adv-ui'

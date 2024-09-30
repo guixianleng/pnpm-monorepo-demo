@@ -28,7 +28,6 @@ export default defineApplicationConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern-compiler",
           javascriptEnabled: true,
           // 自动导入定制化样式进行文件覆盖
           additionalData: `@use "@/styles/theme.scss" as *;`,
