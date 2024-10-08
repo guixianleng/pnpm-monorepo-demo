@@ -54,7 +54,7 @@ import {
   AdvPage
 } from "advint-ui"
 import { changeRoleStatus, delRole, listRole } from "@user-admin/api"
-import { RoleVO } from "../../../api/role/types"
+import { RoleVO } from "@user-admin/types"
 
 import ModifyDialog from "./components/ModifyDialog.vue"
 import DataDialog from "./components/DataDialog.vue"

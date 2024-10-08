@@ -6,7 +6,7 @@
 import { useForm, AdvForm } from "advint-ui"
 
 import { Formschemas } from "../enums/form.enum"
-import { DeptForm } from "../../../../api/dept/types"
+import { DeptForm } from "@user-admin/types"
 import { addDept, getDept, updateDept } from "@user-admin/api"
 const props = withDefaults(
   defineProps<{

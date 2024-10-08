@@ -1,7 +1,7 @@
 import type { FormSchema } from "advint-ui"
 
 import { listMenu } from "@user-admin/api"
-import { MenuEnum, MenuTypeEnum } from "../../../../enums/menuEnum"
+import { MenuEnum, MenuTypeEnum } from "@user-admin/enums"
 
 import { YNOptions } from "./options.enum"
 

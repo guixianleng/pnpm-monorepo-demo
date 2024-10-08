@@ -13,10 +13,10 @@
 
 <script setup lang="ts">
 import { useForm, AdvForm, AdvDialog } from "advint-ui"
-import { addType, updateType } from "../../../../api/dict/type"
+import { addType, updateType } from "@user-admin/api"
 
 import { Formschemas } from "../enums/form.enum"
-import { DictTypeForm } from "../../../../api/dict/type/types"
+import { DictTypeForm } from "@user-admin/types"
 
 const props = withDefaults(
   defineProps<{

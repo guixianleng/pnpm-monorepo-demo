@@ -13,9 +13,9 @@ import CryptoJS from "crypto-js"
 import { decode } from "js-base64"
 import { Formschemas } from "../enums/form.enum"
 
-import { TenantForm } from "../../api/tenant/types"
+import { TenantForm } from "@user-admin/types"
 import { addTenant, updateTenant, getTenant, gerDecodeSrcret } from "@user-admin/api"
-import MenuTreeSelect from "../../../../components/MenuTreeSelect/index.vue"
+import { MenuTreeSelect } from "@user-admin/components"
 
 const props = withDefaults(
   defineProps<{

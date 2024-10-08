@@ -35,9 +35,8 @@
 <script setup name="AdvDictData" lang="ts">
 import { useMessageBox, AdvFormTable, useFormTable, AdvPage } from "advint-ui"
 
-import { getType } from "../../../api/dict/type"
-import { listData, delData } from "@user-admin/api"
-import { DictDataForm, DictDataVO } from "../../../api/dict/data/types"
+import { listData, delData, getType } from "@user-admin/api"
+import type { DictDataForm, DictDataVO } from "@user-admin/types"
 
 import DataDialog from "./components/DataDialog.vue"
 import { DataColumns, SearchSchemas } from "./enums/data-table.enum"

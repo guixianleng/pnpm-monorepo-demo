@@ -8,9 +8,9 @@ import AdvPostManage from "./system/post"
 import { AdvRoleManage, AdvRoleAuth } from "./system/role"
 import { AdvUserManage, AdvUserAuth } from "./system/user"
 import AdvTenantManage from "./system/tenant"
+import AdvLogin from "./login"
 import AdvRedirect from "./redirect"
 import AdvHome from "./home"
-import AdvLogin from "./login"
 import { Adv401, Adv404 } from "./error"
 
 const components: { [propName: string]: Component } = [
@@ -25,9 +25,9 @@ const components: { [propName: string]: Component } = [
   AdvUserManage,
   AdvUserAuth,
   AdvTenantManage,
+  AdvLogin,
   AdvRedirect,
   AdvHome,
-  AdvLogin,
   Adv401,
   Adv404
 ]
@@ -37,9 +37,9 @@ const install = (app: App) => {
   // const configProvider = deepMerge(config, options) // 合并值
   // app.config.globalProperties["config-provider"] = configProvider
   // app.provide("configProvider", readonly(configProvider))
-  components.forEach(component => {
-    app.component(component.name as string, component)
-  })
+  for (const key in components) {
+    app.component(key, components[key])
+  }
 }
 
 // @ts-ignore
@@ -58,7 +58,6 @@ export * from "@user-admin/api"
 
 // 按需引入
 export {
-  install,
   AdvLayout,
   AdvDeptManage,
   AdvDictType,
@@ -70,9 +69,9 @@ export {
   AdvUserManage,
   AdvUserAuth,
   AdvTenantManage,
+  AdvLogin,
   AdvRedirect,
   AdvHome,
-  AdvLogin,
   Adv401,
   Adv404
 }

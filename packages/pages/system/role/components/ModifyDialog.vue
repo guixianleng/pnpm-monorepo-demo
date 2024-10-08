@@ -18,10 +18,10 @@
 <script setup lang="ts">
 import { useForm, AdvForm, AdvDialog } from "advint-ui"
 import { addRole, updateRole } from "@user-admin/api"
-import MenuTreeSelect from "../../../../components/MenuTreeSelect/index.vue"
+import { MenuTreeSelect } from "@user-admin/components"
 
 import { Formschemas } from "../enums/form.enum"
-import { RoleVO } from "../../../../api/role/types"
+import { RoleVO } from "@user-admin/types"
 
 const props = withDefaults(
   defineProps<{

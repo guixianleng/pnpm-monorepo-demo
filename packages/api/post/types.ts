@@ -19,5 +19,5 @@ export interface PostForm {
 export interface PostQuery extends PageQuery {
   postCode: string
   postName: string
-  postStatus: string
+  postStatus: string | number
 }

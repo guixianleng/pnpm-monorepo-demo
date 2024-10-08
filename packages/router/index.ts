@@ -1,7 +1,24 @@
 import { createWebHistory, createRouter, RouteRecordRaw } from "vue-router"
+
+declare module "vue-router" {
+  interface _RouteRecordBase {
+    hidden?: boolean | string | number
+    permissions?: string[]
+  }
+}
+
 /* Layout */
 import Layout from "@user-admin/layout"
-import { Adv401, Adv404, AdvRedirect, AdvHome, AdvLogin } from "@user-admin/pages"
+import {
+  Adv401,
+  Adv404,
+  AdvRedirect,
+  AdvHome,
+  AdvLogin,
+  AdvDictData,
+  AdvRoleAuth,
+  AdvUserAuth
+} from "@user-admin/pages"
 
 // 公共路由
 export const constantRoutes: RouteRecordRaw[] = [
@@ -58,48 +75,48 @@ export const constantRoutes: RouteRecordRaw[] = [
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes: RouteRecordRaw[] = [
-  // {
-  //   path: "/system/user-auth",
-  //   component: Layout,
-  //   hidden: true,
-  //   permissions: ["system:user:role"],
-  //   children: [
-  //     {
-  //       path: "role/:userId(\\d+)",
-  //       component: () => import("~/pages/system/user/authRole.vue"),
-  //       name: "AuthRole",
-  //       meta: { title: "分配角色", activeMenu: "/system/user", icon: "" }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: "/system/role-auth",
-  //   component: Layout,
-  //   hidden: true,
-  //   permissions: ["system:role:edit"],
-  //   children: [
-  //     {
-  //       path: "user/:roleId(\\d+)",
-  //       component: () => import("~/pages/system/role/authUser.vue"),
-  //       name: "AuthUser",
-  //       meta: { title: "分配用户", activeMenu: "/system/role", icon: "" }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: "/system/dict-data",
-  //   component: Layout,
-  //   hidden: true,
-  //   permissions: ["system:dict:list"],
-  //   children: [
-  //     {
-  //       path: "index/:dictId(\\d+)",
-  //       component: () => import("~/pages/system/dict/data.vue"),
-  //       name: "Data",
-  //       meta: { title: "字典数据", activeMenu: "/system/dict", icon: "" }
-  //     }
-  //   ]
-  // }
+  {
+    path: "/system/user-auth",
+    component: Layout,
+    hidden: true,
+    permissions: ["system:user:role"],
+    children: [
+      {
+        path: "role/:userId(\\d+)",
+        component: AdvUserAuth,
+        name: "AuthRole",
+        meta: { title: "分配角色", activeMenu: "/system/user", icon: "" }
+      }
+    ]
+  },
+  {
+    path: "/system/role-auth",
+    component: Layout,
+    hidden: true,
+    permissions: ["system:role:edit"],
+    children: [
+      {
+        path: "user/:roleId(\\d+)",
+        component: AdvRoleAuth,
+        name: "AuthUser",
+        meta: { title: "分配用户", activeMenu: "/system/role", icon: "" }
+      }
+    ]
+  },
+  {
+    path: "/system/dict-data",
+    component: Layout,
+    hidden: true,
+    permissions: ["system:dict:list"],
+    children: [
+      {
+        path: "index/:dictId(\\d+)",
+        component: AdvDictData,
+        name: "Data",
+        meta: { title: "字典数据", activeMenu: "/system/dict", icon: "" }
+      }
+    ]
+  }
 ]
 
 /**

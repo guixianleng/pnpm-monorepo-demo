@@ -14,12 +14,18 @@ importers:
       '@user-admin/api':
         specifier: workspace:^
         version: link:packages/api
+      '@user-admin/components':
+        specifier: workspace:^
+        version: link:packages/components
       '@user-admin/config':
         specifier: workspace:^
         version: link:packages/config
       '@user-admin/directive':
         specifier: workspace:^
         version: link:packages/directive
+      '@user-admin/enums':
+        specifier: workspace:^
+        version: link:packages/enums
       '@user-admin/hooks':
         specifier: workspace:^
         version: link:packages/hooks
@@ -222,9 +228,13 @@ importers:
 
   packages/api: {}
 
+  packages/components: {}
+
   packages/config: {}
 
   packages/directive: {}
+
+  packages/enums: {}
 
   packages/hooks: {}
 
@@ -2059,6 +2069,7 @@ packages:
   eslint@8.57.1:
     resolution: {integrity: sha512-ypowyDxpVSYpkXr9WPv2PAZCtNip1Mv5KTW0SCurXv/9iOpcrH9PaqUElksqEB6pChqHGDRCFTyrZlGhnLNGiA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:

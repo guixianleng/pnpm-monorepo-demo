@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { useForm, AdvForm } from "advint-ui"
 import { Formschemas } from "../enums/form.enum"
-import { PostForm } from "../../../../api/post/types"
+import { PostForm } from "@user-admin/types"
 import { addPost, getPost, updatePost } from "@user-admin/api"
 const props = withDefaults(
   defineProps<{

@@ -119,7 +119,7 @@
 <script setup lang="ts" name="Settings">
 import { useDynamicTitle, handleThemeStyle } from "@user-admin/utils"
 import { useAppStore, useSettingsStore, usePermissionStore } from "@user-admin/store"
-import { SideThemeEnum } from "../../../../enums/SideThemeEnum"
+import { SideThemeEnum } from "@user-admin/enums"
 import { defaultSettings } from "@user-admin/config"
 import $modal from "@user-admin/plugins"
 

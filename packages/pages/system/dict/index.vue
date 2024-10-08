@@ -40,7 +40,7 @@
 <script setup name="AdvDictType" lang="ts">
 import { useMessageBox, useFormTable, AdvFormTable, AdvPage } from "advint-ui"
 import { listType, delType } from "@user-admin/api"
-import { DictTypeForm, DictTypeVO } from "../../../api/dict/type/types"
+import type { DictTypeForm, DictTypeVO } from "@user-admin/types"
 
 import ModifyDialog from "./components/ModifyDialog.vue"
 import { DataColumns, SearchSchemas } from "./enums/table.enum"

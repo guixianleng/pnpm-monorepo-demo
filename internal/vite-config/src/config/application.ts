@@ -45,7 +45,8 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
             // 解决warning in Dart Sass 2.0.0
             api: "modern-compiler",
           }
-      }
+        }
+      },
       build: {
         outDir: 'lib',
         target: 'es2015',
@@ -53,12 +54,24 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
         sourcemap: true,
         rollupOptions: {
           // 请确保外部化那些你的库中不需要的依赖
-          external: ['vue'],
+          external: ['vue', 'pinia', 'vue-router', 'element-plus'],
           output: {
             // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
             globals: {
               vue: 'Vue',
+              pinia: 'pinia',
+              vueRouter: 'vue-router',
+              ElementPlus: 'element-plus'
             },
+            manualChunks(id) {
+              if (id.includes('node_modules/pinia')) {
+                // 将pinia相关的模块打包在一个chunk中
+                return 'pinia.js';
+              }
+              // 其他逻辑可以根据需要添加，例如将相同store的模块打包在一起
+              // 例如，可以根据store文件夹结构来分割
+              return 'chunks/[name].[hash].js';
+            }
           },
         },
         lib: {
@@ -66,7 +79,7 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
           formats: ['es', 'cjs'],
           name: 'advUi',
           fileName: format => {
-            const fileName = 'adv-ui'
+            const fileName = 'adv-user-admin'
             if (format === 'es') {
               return `${fileName}.esm.js`
             }
@@ -78,6 +91,10 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
         },
       },
       plugins,
+      // 配置pinia插件
+      optimizeDeps: {
+        include: ['pinia-plugin-persistedstate', 'pinia', 'vue-router']
+      },
     };
 
     const mergedConfig = mergeConfig(commonConfig(mode), applicationConfig);

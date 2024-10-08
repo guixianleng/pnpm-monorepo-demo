@@ -61,7 +61,7 @@ export interface UserInfoVO {
   roles: RoleVO[]
   roleIds: string[]
   posts: PostVO[]
-  postIds: string[]
+  postIds: string[] | number[]
   roleGroup: string
   postGroup: string
 }

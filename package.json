@@ -1,12 +1,12 @@
 {
-  "name": "adv-ui",
+  "name": "adv-user-admin",
   "version": "0.0.1",
   "description": "基于Element-plus二次封装基础组件",
   "private": false,
   "type": "module",
-  "main": "lib/adv-ui.cjs.js",
-  "module": "lib/adv-ui.esm.js",
-  "types": "lib/types/components/index.d.ts",
+  "main": "lib/adv-user-admin.cjs.js",
+  "module": "lib/adv-user-admin.esm.js",
+  "types": "lib/types/packages/pages/index.d.ts",
   "files": [
     "package.json",
     "README.md",
@@ -36,8 +36,10 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@user-admin/api": "workspace:^",
+    "@user-admin/components": "workspace:^",
     "@user-admin/config": "workspace:^",
     "@user-admin/directive": "workspace:^",
+    "@user-admin/enums": "workspace:^",
     "@user-admin/hooks": "workspace:^",
     "@user-admin/layout": "workspace:^",
     "@user-admin/pages": "workspace:^",

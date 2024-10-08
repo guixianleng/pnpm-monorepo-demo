@@ -5,9 +5,8 @@ import { getRouters } from "@user-admin/api"
 import auth from "@user-admin/plugins"
 import { RouteRecordRaw } from "vue-router"
 
-import Layout from "@user-admin/layout"
-import ParentView from "../../components/ParentView/index.vue"
-import InnerLink from "../../layout/src/components/InnerLink/index.vue"
+import Layout, { InnerLink } from "@user-admin/layout"
+import { ParentView } from "@user-admin/components"
 import { convertToUpperCamelCase } from "@user-admin/utils"
 
 // 匹配views、system里面所有的.vue文件

@@ -32,7 +32,7 @@
 import { useMessageBox, useFormTable, AdvFormTable, AdvPage } from "advint-ui"
 
 import { allocatedUserList, authUserCancel, authUserCancelAll } from "@user-admin/api"
-import { UserVO } from "../../../api/user/types"
+import { UserVO } from "@user-admin/types"
 import { useDict } from "@user-admin/utils"
 
 import { AuthUserColumns, SearchSchemas } from "./enums/user-table.enum"

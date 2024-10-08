@@ -48,7 +48,7 @@ import { handleTree } from "@user-admin/utils"
 import { h } from "vue"
 import ModifyDialog from "./components/ModifyDialog.vue"
 import { DataColumns, SearchSchemas } from "./enums/table.enum"
-import { DeptVO } from "../../../api/dept/types"
+import { DeptVO } from "@user-admin/types"
 import { permission } from "./permission/index"
 
 // 注册use-form

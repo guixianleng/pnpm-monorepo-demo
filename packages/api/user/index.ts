@@ -62,7 +62,7 @@ export const updateUser = (data: UserForm) => {
 /**
  * 修改用户状态
  */
-export const updateUserStatus = (data: UserForm) => {
+export const updateUserStatus = (data: any) => {
   return Http.request({
     url: "/admin/user/updateStatus",
     method: "put",

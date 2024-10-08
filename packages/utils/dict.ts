@@ -10,7 +10,7 @@ export const useDict = (...args: string[]): { [key: string]: DictDataOption[] } 
   }>({})
 
   const appContext = getCurrentInstance()?.appContext.config.globalProperties
-  if (!appContext?.$pinia) return false
+  if (!appContext?.$pinia) return {}
   return (() => {
     args.forEach(async dictType => {
       res.value[dictType] = []

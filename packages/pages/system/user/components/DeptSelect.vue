@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DeptVO } from "../../../../api/dept/types"
+import type { DeptVO } from "@user-admin/types"
 import { listDept } from "@user-admin/api"
 import { useTransformTree } from "co-utils-vue"
 import { watchEffect } from "vue"

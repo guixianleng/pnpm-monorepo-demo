@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { PostVO } from "../../../../api/post/types"
+import type { PostVO } from "@user-admin/types"
 import { listPost } from "@user-admin/api"
+
 const postIds = defineModel({
   type: Array,
   default: () => []

@@ -39,7 +39,7 @@ import { MenuForm, MenuVO } from "@user-admin/types"
 import ModifyDialog from "./components/ModifyDialog.vue"
 import { DataColumns, SearchSchemas, sys_normal_disable } from "./enums/table.enum"
 import { permEnum } from "./enums/permission.enum"
-import DictTag from "../../../components/DictTag/index.vue"
+import { DictTag } from "@user-admin/components"
 
 // 注册use-form
 const [register, { reload }] = useFormTable({

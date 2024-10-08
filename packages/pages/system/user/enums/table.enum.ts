@@ -1,7 +1,7 @@
 import { defineTableColumns, type FormSchema, type IEnumItem } from "advint-ui"
 import TableMoreOp from "../components/TableMoreOp.vue"
 import { STATUS_LABEL_LIST } from "../constants"
-import { DataScopeList } from "../../../../enums/menuEnum"
+import { DataScopeList } from "@user-admin/enums"
 import { useHasPermission } from "@user-admin/hooks"
 import { permission } from "../permission"
 export const tableEnum = defineTableColumns([

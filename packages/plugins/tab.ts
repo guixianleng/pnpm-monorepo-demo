@@ -13,6 +13,7 @@ export default {
       matched.forEach((m: RouteLocationMatched) => {
         if (m.components && m.components.default && m.components.default.name) {
           if (!["Layout", "ParentView"].includes(m.components.default.name)) {
+            // @ts-ignore
             obj = {
               name: m.components.default.name,
               path: path,

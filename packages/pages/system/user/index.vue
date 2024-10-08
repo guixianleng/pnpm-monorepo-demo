@@ -38,7 +38,7 @@
               v-hasPermi="permission.ADD"
               type="primary"
               icon="plus"
-              @click="() => handleDialog()"
+              @click="() => handleDialog({})"
             >
               新增
             </el-button>
@@ -83,8 +83,7 @@ import { tableEnum } from "./enums/table.enum"
 import { SearchSchemas } from "./enums/table.enum"
 import { delUser, listUser, updateUserStatus, listDept } from "@user-admin/api"
 import DialogOp from "./components/DialogOp.vue"
-import type { UserVO } from "../../../api/user/types"
-import type { DeptVO } from "../../../api/dept/types"
+import type { UserVO, DeptVO } from "@user-admin/types"
 import { useTransformTree } from "co-utils-vue"
 import { ElTree, ElMessage } from "element-plus"
 import { watch, ref, onMounted } from "vue"

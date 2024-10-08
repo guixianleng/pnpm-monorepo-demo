@@ -16,7 +16,7 @@ import { useForm, AdvForm, AdvDialog } from "advint-ui"
 import { addData, updateData } from "@user-admin/api"
 
 import { DataFormschemas } from "../enums/form.enum"
-import { DictDataForm } from "../../../../api/dict/data/types"
+import { DictDataForm } from "@user-admin/types"
 
 const props = withDefaults(
   defineProps<{

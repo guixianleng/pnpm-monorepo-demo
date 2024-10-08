@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RoleVO } from "../../../../api/role/types"
+import type { RoleVO } from "@user-admin/types"
 import { listRole } from "@user-admin/api"
 
 const rolesIds = defineModel({
