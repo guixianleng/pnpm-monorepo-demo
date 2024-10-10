@@ -1,6 +1,8 @@
-import router from "@user-admin/router"
+// import router from "@user-admin/router"
 import { RouteLocationMatched, RouteLocationNormalized } from "vue-router"
 import { useTagsViewStore } from "@user-admin/store"
+
+import { useGlobalConfig } from "@user-admin/hooks"
 
 export default {
   /**
@@ -8,7 +10,8 @@ export default {
    * @param obj 标签对象
    */
   async refreshPage(obj?: RouteLocationNormalized): Promise<void> {
-    const { path, query, matched } = router.currentRoute.value
+    const globalConfig = useGlobalConfig()
+    const { path, query, matched } = unref(globalConfig).router.currentRoute.value
     if (obj === undefined) {
       matched.forEach((m: RouteLocationMatched) => {
         if (m.components && m.components.default && m.components.default.name) {
@@ -18,12 +21,11 @@ export default {
               name: m.components.default.name,
               path: path,
               query: query,
-              matched: undefined,
-              fullPath: undefined,
-              hash: undefined,
-              params: undefined,
-              redirectedFrom: undefined,
-              meta: undefined
+              matched: [],
+              fullPath: "",
+              hash: "",
+              params: {},
+              meta: {}
             }
           }
         }
@@ -36,30 +38,32 @@ export default {
       path1 = obj.path
     }
     await useTagsViewStore().delCachedView(obj)
-    await router.replace({
+    await unref(globalConfig).router.replace({
       path: "/redirect" + path1,
-      query: query1
+      query: query1 as any
     })
   },
   // 关闭当前tab页签，打开新页签
   closeOpenPage(obj: RouteLocationNormalized): void {
-    useTagsViewStore().delView(router.currentRoute.value)
+    const globalConfig = useGlobalConfig()
+    useTagsViewStore().delView(unref(globalConfig).router.currentRoute.value)
     if (obj !== undefined) {
-      router.push(obj)
+      unref(globalConfig).router.push(obj)
     }
   },
   // 关闭指定tab页签
   async closePage(
     obj?: RouteLocationNormalized
   ): Promise<{ visitedViews: RouteLocationNormalized[]; cachedViews: string[] } | any> {
+    const globalConfig = useGlobalConfig()
     if (obj === undefined) {
       // prettier-ignore
-      const { visitedViews } = await useTagsViewStore().delView(router.currentRoute.value)
+      const { visitedViews } = await useTagsViewStore().delView(unref(globalConfig).router.currentRoute.value)
       const latestView = visitedViews.slice(-1)[0]
       if (latestView) {
-        return router.push(latestView.fullPath)
+        return unref(globalConfig).router.push(latestView.fullPath)
       }
-      return router.push("/")
+      return unref(globalConfig).router.push("/")
     }
     return useTagsViewStore().delView(obj)
   },
@@ -69,15 +73,18 @@ export default {
   },
   // 关闭左侧tab页签
   closeLeftPage(obj?: RouteLocationNormalized) {
-    return useTagsViewStore().delLeftTags(obj || router.currentRoute.value)
+    const globalConfig = useGlobalConfig()
+    return useTagsViewStore().delLeftTags(obj || unref(globalConfig).router.currentRoute.value)
   },
   // 关闭右侧tab页签
   closeRightPage(obj?: RouteLocationNormalized) {
-    return useTagsViewStore().delRightTags(obj || router.currentRoute.value)
+    const globalConfig = useGlobalConfig()
+    return useTagsViewStore().delRightTags(obj || unref(globalConfig).router.currentRoute.value)
   },
   // 关闭其他tab页签
   closeOtherPage(obj?: RouteLocationNormalized) {
-    return useTagsViewStore().delOthersViews(obj || router.currentRoute.value)
+    const globalConfig = useGlobalConfig()
+    return useTagsViewStore().delOthersViews(obj || unref(globalConfig).router.currentRoute.value)
   },
   /**
    * 打开tab页签
@@ -86,8 +93,9 @@ export default {
    * @param query 参数
    */
   openPage(url: string, title?: string, query?: any) {
+    const globalConfig = useGlobalConfig()
     const obj = { path: url, query: { ...query, title } }
-    return router.push(obj)
+    return unref(globalConfig).router.push(obj)
   },
   /**
    * 修改tab页签

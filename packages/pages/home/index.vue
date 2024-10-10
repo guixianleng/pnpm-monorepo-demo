@@ -6,6 +6,11 @@
 
 <script setup lang="ts" name="home">
 import welcome from "../../assets/images/welcome.png"
+import { useGlobalConfig } from "@user-admin/hooks"
+
+onMounted(() => {
+  console.log("provideGlobalConfig", useGlobalConfig().value)
+})
 </script>
 
 <style scoped lang="scss">

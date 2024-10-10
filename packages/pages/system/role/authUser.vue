@@ -25,7 +25,7 @@
     </adv-form-table>
   </adv-page>
   <!-- 选择用户 -->
-  <select-user v-if="dialogShow" v-model="dialogShow" :role-id="currentRoleId" @success="getList" />
+  <select-user v-if="dialogShow" v-model="dialogShow" :role-id="currentRoleId" @success="reload" />
 </template>
 
 <script setup name="AdvRoleAuth" lang="ts">

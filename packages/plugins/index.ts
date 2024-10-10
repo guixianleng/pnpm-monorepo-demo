@@ -1,7 +1,3 @@
-// export * from "./auth"
-// export * from "./modal"
-// export * from "./requireIcons"
-// export * from "./tab"
 import auth from "./auth"
 import modal from "./modal"
 import tab from "./tab"

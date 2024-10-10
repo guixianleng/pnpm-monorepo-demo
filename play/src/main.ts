@@ -1,18 +1,13 @@
 import { createApp } from 'vue'
 import '../../packages/styles/index.scss'
-import '../../packages/styles/tailwindcss.css'
-import 'element-plus/theme-chalk/dark/css-vars.css'
-import 'advint-ui/dist/style.css'
 
 import App from './App.vue'
-import router from '@user-admin/router'
-import store from '@user-admin/store'
+import router from './plugins/router'
+import store from './plugins/pinia'
+import adminUi from '@user-admin/pages'
 
 // 自定义指令
-import directive from '@user-admin/directive'
-
-// 注册插件
-import plugins from './plugins/index'
+import { vHasPermi } from '@user-admin/directive'
 
 // svg图标
 import 'virtual:svg-icons-register'
@@ -24,6 +19,10 @@ import './permission'
 const app = createApp(App)
 
 // 自定义指令
-directive(app)
+app.directive("hasPermi", vHasPermi)
 
-app.use(ElementIcons).use(store).use(router).use(plugins).mount('#app')
+app.use(ElementIcons).use(store).use(router).use(adminUi, {
+  router,
+  store,
+  baseUrl: 'http://platform.dev.advint.cn/'
+}).mount('#app')

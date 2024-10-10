@@ -3,7 +3,7 @@ import { useUserStore } from "@user-admin/store"
 /**
  * 操作权限处理
  */
-export const hasPermi: Directive = {
+export const vHasPermi: Directive = {
   mounted(el: HTMLElement, binding: DirectiveBinding) {
     const { permissions } = useUserStore()
     // 「其他角色」按钮权限校验
@@ -25,7 +25,7 @@ export const hasPermi: Directive = {
 /**
  * 角色权限处理
  */
-export const hasRoles: Directive = {
+export const vHasRoles: Directive = {
   mounted(el: HTMLElement, binding: DirectiveBinding) {
     const { value } = binding
     const { roles } = useUserStore()

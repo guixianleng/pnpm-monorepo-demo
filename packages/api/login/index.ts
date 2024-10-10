@@ -1,10 +1,11 @@
+import { AxiosPromise } from "axios"
 import { Http } from "@user-admin/api"
 import type { UserInfo } from "@user-admin/types"
-import { AxiosPromise } from "axios"
+import { ClientIdEnum } from "@user-admin/enums"
+
 import { LoginData, LoginResult } from "./types"
 
 // pc端固定客户端授权id
-const clientId = import.meta.env.VITE_APP_CLIENT_ID
 
 /**
  * @param data {LoginData}
@@ -13,7 +14,7 @@ const clientId = import.meta.env.VITE_APP_CLIENT_ID
 export async function login(data: LoginData): AxiosPromise<LoginResult> {
   const params = {
     ...data,
-    clientId: data.clientId || clientId
+    clientId: data.clientId || ClientIdEnum
   }
   return Http.request({
     url: "/auth/login",

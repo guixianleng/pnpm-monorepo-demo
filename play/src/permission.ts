@@ -1,7 +1,7 @@
 import { to as tos } from 'await-to-js'
 import { isRelogin } from '@user-admin/api'
 import { isHttp, getToken } from '@user-admin/utils'
-import router from '@user-admin/router'
+import router from './plugins/router'
 import { useUserStore, useSettingsStore, usePermissionStore } from '@user-admin/store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

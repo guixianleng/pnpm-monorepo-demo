@@ -26,7 +26,7 @@
     v-model="dialogShow"
     :edit-data="editRow"
     :parent-id="curParentId"
-    @success="getList"
+    @success="reload"
   ></modify-dialog>
 </template>
 

@@ -33,7 +33,7 @@
     v-if="dialogShow"
     v-model="dialogShow"
     :edit-data="editRow"
-    @success="getList"
+    @success="reload"
   ></modify-dialog>
 </template>
 

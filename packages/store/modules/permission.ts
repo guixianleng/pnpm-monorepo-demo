@@ -1,13 +1,12 @@
 import { defineStore } from "pinia"
-import router, { constantRoutes } from "@user-admin/router"
-import store from "@user-admin/store"
+import { RouteRecordRaw } from "vue-router"
+import { constantRoutes } from "@user-admin/router"
 import { getRouters } from "@user-admin/api"
 import auth from "@user-admin/plugins"
-import { RouteRecordRaw } from "vue-router"
-
 import Layout, { InnerLink } from "@user-admin/layout"
 import { ParentView } from "@user-admin/components"
 import { convertToUpperCamelCase } from "@user-admin/utils"
+import { useGlobalConfig } from "@user-admin/hooks"
 
 // 匹配views、system里面所有的.vue文件
 const modules = import.meta.glob("./../../pages/**/*.vue")
@@ -18,6 +17,8 @@ export const usePermissionStore = defineStore("permission", () => {
   const defaultRoutes = ref<RouteRecordRaw[]>([])
   const topbarRouters = ref<RouteRecordRaw[]>([])
   const sidebarRouters = ref<RouteRecordRaw[]>([])
+
+  const globalConfig = useGlobalConfig()
 
   const getRoutes = (): RouteRecordRaw[] => {
     return routes.value
@@ -120,7 +121,7 @@ export const usePermissionStore = defineStore("permission", () => {
           }
         ]
       }
-      router.addRoute(route as RouteRecordRaw)
+      unref(globalConfig).router.addRoute(route as RouteRecordRaw)
     })
     setRoutes(updatedData)
     setSidebarRouters(constantRoutes.concat(updatedData))
@@ -240,7 +241,8 @@ export const loadView = (view: any) => {
 
 // 非setup
 export const usePermissionStoreHook = () => {
-  return usePermissionStore(store)
+  const globalConfig = useGlobalConfig()
+  return usePermissionStore(unref(globalConfig).store)
 }
 
 export default usePermissionStore

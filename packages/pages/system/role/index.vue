@@ -34,14 +34,14 @@
     v-if="dialogShow"
     v-model="dialogShow"
     :edit-data="editRow"
-    @success="getList"
+    @success="reload"
   ></modify-dialog>
   <!-- 分配权限弹框 -->
   <data-dialog
     v-if="dataScopeShow"
     v-model="dataScopeShow"
     :edit-data="editDataRow"
-    @success="getList"
+    @success="reload"
   ></data-dialog>
 </template>
 

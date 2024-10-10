@@ -1,7 +1,10 @@
-import { useUserStore } from "@user-admin/store"
-import { getToken } from "@user-admin/utils"
 import { createAxios } from "advint-ui"
 import { ElMessageBox } from "element-plus"
+import { useUserStore } from "@user-admin/store"
+import { getToken } from "@user-admin/utils"
+// import { useGlobalConfig } from "@user-admin/hooks"
+
+// const globalConfig = useGlobalConfig("baseUrl", "http://platform.dev.advint.cn")
 
 // 是否显示重新登录
 export const isRelogin = { show: false }
@@ -30,7 +33,7 @@ export const Http = createAxios({
             useUserStore()
               .logout()
               .then(() => {
-                location.href = import.meta.env.VITE_APP_CONTEXT_PATH + "login"
+                location.href = "/login"
               })
           })
           .catch(() => {
@@ -39,6 +42,7 @@ export const Http = createAxios({
       }
       return Promise.reject("无效的会话，或者会话已过期，请重新登录。")
     },
-    apiUrl: import.meta.env.VITE_APP_BASE_API
+    // apiUrl: getCurrentInstance()?.appContext.config.globalProperties.$baseUrl
+    apiUrl: "http://platform.dev.advint.cn"
   }
 })

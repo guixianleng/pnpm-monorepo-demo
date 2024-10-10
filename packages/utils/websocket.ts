@@ -18,9 +18,10 @@
  * @param {number} socketError 错误次数
  */
 
-import { getToken } from "@user-admin/utils"
 import { ElNotification } from "element-plus"
+import { getToken } from "@user-admin/utils"
 import { useNoticeStore } from "@user-admin/store"
+import { ClientIdEnum } from "@user-admin/enums"
 
 let socketUrl: any = "" // socket地址
 let websocket: any = null // websocket 实例
@@ -37,7 +38,7 @@ export const initWebSocket = (url: any) => {
   socketUrl = url
   // 初始化 websocket
   websocket = new WebSocket(
-    url + "?Authorization=Bearer " + getToken() + "&clientid=" + import.meta.env.VITE_APP_CLIENT_ID
+    url + "?Authorization=Bearer " + getToken() + "&clientid=" + ClientIdEnum
   )
   websocketonopen()
   websocketonmessage()

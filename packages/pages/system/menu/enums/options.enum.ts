@@ -21,3 +21,14 @@ export const YNOptions: LabelValueOptions[] = [
     value: "1"
   }
 ]
+
+export const StateOptions: LabelValueOptions[] = [
+  {
+    label: "显示",
+    value: 1
+  },
+  {
+    label: "隐藏",
+    value: 0
+  }
+]

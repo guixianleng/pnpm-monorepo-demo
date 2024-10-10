@@ -3,13 +3,7 @@ import type { FormSchema } from "advint-ui"
 import { listMenu } from "@user-admin/api"
 import { MenuEnum, MenuTypeEnum } from "@user-admin/enums"
 
-import { YNOptions } from "./options.enum"
-
-import { useDict } from "@user-admin/utils"
-
-const { sys_show_hide, sys_normal_disable } = toRefs<any>(
-  useDict("sys_show_hide", "sys_normal_disable")
-)
+import { YNOptions, StateOptions } from "./options.enum"
 
 export const Formschemas: FormSchema[] = [
   {
@@ -154,7 +148,7 @@ export const Formschemas: FormSchema[] = [
     defaultValue: 1,
     colSpan: 12,
     componentProps: {
-      options: sys_show_hide
+      options: StateOptions
     }
   },
   {
@@ -165,7 +159,7 @@ export const Formschemas: FormSchema[] = [
     defaultValue: 1,
     colSpan: 12,
     componentProps: {
-      options: sys_normal_disable
+      options: StateOptions
     }
   }
 ]

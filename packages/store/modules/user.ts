@@ -2,7 +2,7 @@ import { to } from "await-to-js"
 import { getToken, removeToken, setToken, setAuthToken } from "@user-admin/utils"
 import { login as loginApi, logout as logoutApi, getInfo as getUserInfo } from "@user-admin/api"
 import type { LoginData } from "@user-admin/types"
-import store from "@user-admin/store"
+import { useGlobalConfig } from "@user-admin/hooks"
 
 export const useUserStore = defineStore("user", () => {
   const token = ref(getToken())
@@ -89,5 +89,6 @@ export default useUserStore
 
 // 非setup
 export function useUserStoreHook() {
-  return useUserStore(store)
+  const globalConfig = useGlobalConfig()
+  return useUserStore(unref(globalConfig).store)
 }

@@ -91,8 +91,8 @@ const isAffix = (tag: RouteLocationNormalized) => {
 const isFirstView = () => {
   try {
     return (
-      selectedTag.value.fullPath === "/index" ||
-      selectedTag.value.fullPath === visitedViews.value[1].fullPath
+      selectedTag.value?.fullPath === "/index" ||
+      selectedTag.value?.fullPath === visitedViews.value[1]?.fullPath
     )
   } catch (e) {
     console.log(e)
@@ -101,7 +101,9 @@ const isFirstView = () => {
 }
 const isLastView = () => {
   try {
-    return selectedTag.value.fullPath === visitedViews.value[visitedViews.value.length - 1].fullPath
+    return (
+      selectedTag.value?.fullPath === visitedViews.value[visitedViews.value.length - 1]?.fullPath
+    )
   } catch (e) {
     console.log(e)
     return false

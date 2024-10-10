@@ -1,7 +1,7 @@
-import DeptManage from "./index.vue"
-
 import { withInstall } from "@user-admin/utils"
+import DeptManage from "./index.vue"
+import type { SFCWithInstall } from "@user-admin/utils"
 
-const AdvDeptManage = withInstall(DeptManage)
+const AdvDeptManage: SFCWithInstall<typeof DeptManage> = withInstall(DeptManage)
 
 export default AdvDeptManage

@@ -1,4 +1,5 @@
 import type { Component, App } from "vue"
+import { provideGlobalConfig, type ConfigProviderContext } from "@user-admin/hooks"
 
 import AdvLayout from "../layout"
 import AdvDeptManage from "./system/dept"
@@ -32,14 +33,16 @@ const components: { [propName: string]: Component } = [
   Adv404
 ]
 
-const install = (app: App) => {
-  // console.log(options, 'config-options')
-  // const configProvider = deepMerge(config, options) // 合并值
-  // app.config.globalProperties["config-provider"] = configProvider
-  // app.provide("configProvider", readonly(configProvider))
+const install = (app: App, options?: ConfigProviderContext) => {
+  console.log(options, "config-options")
+
+  app.config.globalProperties.$baseUrl = options?.baseUrl
+
   for (const key in components) {
     app.component(key, components[key])
   }
+
+  if (options) provideGlobalConfig(options, app, true)
 }
 
 // @ts-ignore
@@ -49,12 +52,12 @@ if (typeof window !== "undefined" && window.Vue) {
 }
 
 // 导出对应的工具类、自定义指令
-export * from "@user-admin/utils"
+export * as utils from "@user-admin/utils"
 export * from "@user-admin/directive"
-export * from "@user-admin/store"
+export * as advStore from "@user-admin/store"
 export * from "@user-admin/router"
-export * from "@user-admin/api"
-// export * from "../styles"
+export * as advApi from "@user-admin/api"
+export * from "../styles/index.scss"
 
 // 按需引入
 export {
