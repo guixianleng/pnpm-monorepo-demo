@@ -2,7 +2,7 @@ const setting: DefaultSettings = {
   /**
    * 网页标题
    */
-  title: import.meta.env.VITE_APP_TITLE,
+  title: "后台管理系统",
 
   theme: "#0073FF",
 

@@ -7,7 +7,7 @@ import { useSettingsStore } from "@user-admin/store"
 export const useDynamicTitle = () => {
   const settingsStore = useSettingsStore()
   if (settingsStore.dynamicTitle) {
-    document.title = settingsStore.title + " - " + import.meta.env.VITE_APP_TITLE
+    document.title = settingsStore.title
   } else {
     document.title = defaultSettings.title as string
   }

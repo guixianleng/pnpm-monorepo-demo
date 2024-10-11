@@ -26,6 +26,7 @@
 
 <script setup lang="ts" name="MenuTreeSelect">
 import { MenuTreeOption, RoleMenuTree } from "@user-admin/types"
+import { ElCheckbox, ElTree } from "element-plus"
 import { listMenu as menuTreeselect, roleMenuTreeselect } from "@user-admin/api"
 
 import { propTypes } from "advint-ui"

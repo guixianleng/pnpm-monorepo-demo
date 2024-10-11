@@ -13,6 +13,7 @@ import AdvLogin from "./login"
 import AdvRedirect from "./redirect"
 import AdvHome from "./home"
 import { Adv401, Adv404 } from "./error"
+import AdvConfigProvider from "./config-provider"
 
 const components: { [propName: string]: Component } = [
   AdvLayout,
@@ -30,17 +31,15 @@ const components: { [propName: string]: Component } = [
   AdvRedirect,
   AdvHome,
   Adv401,
-  Adv404
+  Adv404,
+  AdvConfigProvider
 ]
 
 const install = (app: App, options?: ConfigProviderContext) => {
-  console.log(options, "config-options")
-
-  app.config.globalProperties.$baseUrl = options?.baseUrl
-
-  for (const key in components) {
-    app.component(key, components[key])
-  }
+  // for (const key in components) {
+  //   app.component(key, components[key])
+  // }
+  components.forEach(c => app.use(c))
 
   if (options) provideGlobalConfig(options, app, true)
 }
@@ -76,7 +75,8 @@ export {
   AdvRedirect,
   AdvHome,
   Adv401,
-  Adv404
+  Adv404,
+  AdvConfigProvider
 }
 
 // 导出的对象必须具有 install，才能被 Vue.use() 方法安装

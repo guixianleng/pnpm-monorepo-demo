@@ -229,11 +229,14 @@ export const filterDynamicRoutes = (routes: RouteRecordRaw[]) => {
 
 export const loadView = (view: any) => {
   let res
-  for (const path in modules) {
+  const globalConfig = useGlobalConfig()
+  const pathModules = { ...(globalConfig.value?.pageModules || {}), ...modules }
+  // console.log(pathModules, "modules")
+  for (const path in pathModules) {
     const dir = path.split("pages/")[1].split(".vue")[0]
 
     if (dir === view) {
-      res = () => modules[path]()
+      res = () => pathModules[path]()
     }
   }
   return res

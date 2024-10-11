@@ -3,8 +3,9 @@ import { ElMessageBox } from "element-plus"
 import { useUserStore } from "@user-admin/store"
 import { getToken } from "@user-admin/utils"
 // import { useGlobalConfig } from "@user-admin/hooks"
+// import { useGlobalConfig } from "@user-admin/Pages/config-provider"
 
-// const globalConfig = useGlobalConfig("baseUrl", "http://platform.dev.advint.cn")
+// const globalConfig = useGlobalConfig("baseUrl")
 
 // 是否显示重新登录
 export const isRelogin = { show: false }
@@ -42,7 +43,7 @@ export const Http = createAxios({
       }
       return Promise.reject("无效的会话，或者会话已过期，请重新登录。")
     },
-    // apiUrl: getCurrentInstance()?.appContext.config.globalProperties.$baseUrl
-    apiUrl: "http://platform.dev.advint.cn"
+    apiUrl: "http://llm.dev.advint.cn"
+    // apiUrl: unref(globalConfig)
   }
 })
