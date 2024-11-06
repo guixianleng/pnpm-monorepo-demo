@@ -21,9 +21,3 @@ export declare interface ComponentElRef<T extends HTMLElement = HTMLDivElement> 
 export declare type ComponentRef<T extends HTMLElement = HTMLDivElement> = ComponentElRef<T> | null
 
 export type TimeoutHandle = ReturnType<typeof setTimeout>
-
-export declare type LabelValueOptions = {
-  label: string
-  value: any
-  [key: string]: string | number | boolean
-}[]

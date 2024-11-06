@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "bootstrap": "pnpm install",
-    "dev-demo": "pnpm run -C playground/demo dev",
+    "dev-demo": "pnpm run -C playground dev",
     "lib": "rimraf lib && vite build",
     "build:no-cache": "pnpm store prune && pnpm lib",
     "build:analyze": "pnpm vite build --mode analyze",
@@ -49,6 +49,7 @@
     "qs": "^6.13.0"
   },
   "devDependencies": {
+    "@adv/types": "workspace:^",
     "@adv/vite-config": "workspace:^",
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",

@@ -15,12 +15,9 @@ export default (path: any) => {
     resolvers: [
       // 自动导入 Element Plus 相关函数ElMessage, ElMessageBox... (带样式)
       ElementPlusResolver(),
-      IconsResolver({
-        prefix: 'Icon',
-      }),
     ],
     // 是否在 vue 模板中自动导入
     vueTemplate: true,
-    dts: resolve(resolve(__dirname, '../../../../'), 'types', 'auto-imports.d.ts'),
+    dts: resolve(resolve(__dirname, '../../'), 'types', 'auto-imports.d.ts'),
   })
 }

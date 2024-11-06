@@ -15,9 +15,9 @@ import { ElCheckbox, ElCheckboxButton, ElCheckboxGroup } from "element-plus"
 import { get, omit } from "lodash-es"
 import { computed, defineComponent, PropType, ref, unref, useAttrs, watch, watchEffect } from "vue"
 
-import { Recordable } from "#/types"
-
+import { Recordable } from "@adv/types"
 import { isFunction, isObject } from "@adv/utils"
+
 import type { CheckOptionsItem } from "./type"
 
 export default defineComponent({

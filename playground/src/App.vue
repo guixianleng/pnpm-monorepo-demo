@@ -30,28 +30,16 @@
     <adv-layout-page-item>
       <adv-checkbox-group v-model="checked" :options="options"></adv-checkbox-group>
     </adv-layout-page-item>
-    <adv-layout-page-item>
-      <adv-count-to :start-val="1" :end-val="4389.23" :duration="1000" />
-    </adv-layout-page-item>
-    <adv-layout-page-item>
-      <adv-add-minus v-model="addPlus">
-        <template #default="{ row }">
-          <el-input v-model="row.name" style="width: 280px"></el-input>
-        </template>
-      </adv-add-minus>
-    </adv-layout-page-item>
   </adv-layout-page>
 </template>
 
 <script setup lang="ts">
-// import { 
-//   AdvLayoutPage,
-//   AdvLayoutPageItem,
-//   AdvButton,
-//   AdvAddMinus,
-//   AdvCheckboxGroup,
-//   AdvCountTo
-// } from '@adv/components'
+import { 
+  AdvLayoutPage,
+  AdvLayoutPageItem,
+  AdvButton,
+  AdvCheckboxGroup,
+} from '@adv/components'
 import HelloWorld from './components/HelloWorld.vue'
 
 const options = [

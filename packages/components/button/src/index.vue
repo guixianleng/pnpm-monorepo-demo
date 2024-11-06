@@ -12,9 +12,10 @@
 <script setup lang="ts" name="AdvButton">
 import { ref, unref, PropType, useAttrs, computed } from "vue"
 import { omit } from "lodash-es"
+import { ElButton, ElTooltip } from "element-plus"
+
 import type { Placement } from "element-plus/es/components/popper"
 import type { ElTooltipProps } from "element-plus/es/components/tooltip"
-import { ElButton, ElTooltip } from "element-plus"
 
 const props = defineProps({
   tip: {

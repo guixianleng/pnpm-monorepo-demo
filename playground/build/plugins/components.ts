@@ -8,11 +8,7 @@ export default (path: any) => {
     resolvers: [
       // 自动导入 Element Plus 组件
       ElementPlusResolver(),
-      // 自动注册图标组件
-      IconsResolver({
-        enabledCollections: ['ep'],
-      }),
     ],
-    dts: resolve(resolve(__dirname, '../../../../'), 'types', 'components.d.ts'),
+    dts: resolve(resolve(__dirname, '../../'), 'types', 'components.d.ts'),
   })
 }

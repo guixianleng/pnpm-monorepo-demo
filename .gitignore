@@ -1,18 +1,17 @@
 .DS_Store
 node_modules
-/dist
 lib
 umd
 .turbo
-docs/.vitepress/cache
-docs/.vitepress/dist
+cache
+dist
 
 # 忽略目录
 # examples/
 # packages/
 # public/
-/types/auto-imports.d.ts
-/types/components.d.ts
+auto-imports.d.ts
+components.d.ts
 
 # local env files
 .env.local
