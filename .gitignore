@@ -1,17 +1,15 @@
 .DS_Store
 node_modules
+dist
 lib
 umd
 .turbo
 cache
-dist
 
 # 忽略目录
-# examples/
-# packages/
-# public/
 auto-imports.d.ts
 components.d.ts
+.eslintcache
 
 # local env files
 .env.local

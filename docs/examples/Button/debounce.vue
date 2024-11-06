@@ -21,7 +21,7 @@
       </div>
       <adv-button
         style="margin-top: 15px"
-        :isDebounce="isDebounce"
+        :debounce="isDebounce"
         :delay="time"
         type="primary"
         @click="exportExcel"

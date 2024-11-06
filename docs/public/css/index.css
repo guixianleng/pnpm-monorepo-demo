@@ -19,6 +19,11 @@
 /* .vp-doc {    color: var(--vp-c-brand);
   background-color: var(--el-bg-color);
 } */
+
+.VPDocOutlineItem,
+.outline-title {
+  padding-left: 6px;
+}
 .aside .outline-link.active {
   color: var(--vp-c-brand);
 }

@@ -2,13 +2,13 @@ import { defineConfig } from "vitepress"
 import { mdPlugin } from "./config/plugins"
 
 export default defineConfig({
-  title: "uiPlus基础组件文档",
+  title: "组件库文档",
   description: "基于Element-plus基础组件封装使用",
-  // head: [
-  //   ['link', { rel: 'icon', href: '/favicon.ico' }]
-  // ],
+  head: [
+    ['link', { rel: 'icon', href: '/vite.svg' }]
+  ],
   lang: "cn-ZH",
-  base: "/",
+  base: "/pnpm-monorepo-demo/",
   lastUpdated: true,
   themeConfig: {
     logo: "/vite.svg",
