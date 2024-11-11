@@ -21,7 +21,6 @@
     },
     "types": [
       "vite/client",
-      "element-plus/global",
       "node"
     ]
   },

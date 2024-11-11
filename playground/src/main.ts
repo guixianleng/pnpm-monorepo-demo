@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import './style.css'
-import 'element-plus/dist/index.css'
+
+import vue3dLoader from '../../packages/3d-loader'
 
 import App from './App.vue'
 
-createApp(App).mount('#app')
+createApp(App).use(vue3dLoader).mount('#app')

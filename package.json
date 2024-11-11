@@ -1,19 +1,9 @@
 {
-  "name": "adv-ui",
+  "name": "advint-3d-loader",
   "version": "0.0.1",
-  "description": "基于Element-plus二次封装基础组件",
+  "description": "基于Threejs封装的3d模型加载器",
   "private": false,
   "type": "module",
-  "main": "lib/adv-ui.cjs.js",
-  "module": "lib/adv-ui.esm.js",
-  "types": "lib/types/components/index.d.ts",
-  "files": [
-    "package.json",
-    "README.md",
-    "LICENSE",
-    "lib",
-    "global.d.ts"
-  ],
   "scripts": {
     "bootstrap": "pnpm install",
     "dev-demo": "pnpm run -C playground dev",
@@ -39,23 +29,18 @@
     "vue": "^3.2.0"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^11.1.0",
-    "axios": "^1.7.7",
-    "co-utils-vue": "^2.5.1",
-    "element-plus": "^2.8.3",
     "lodash-es": "^4.17.21",
-    "pinia": "^2.2.2",
-    "qs": "^6.13.0"
+    "three": "^0.170.0"
   },
   "devDependencies": {
-    "@adv/types": "workspace:^",
     "@adv/vite-config": "workspace:^",
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "22.5.5",
     "@types/path-browserify": "^1.0.3",
+    "@types/three": "^0.169.0",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
     "@vitejs/plugin-vue": "^5.1.4",
