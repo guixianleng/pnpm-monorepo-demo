@@ -3,8 +3,7 @@
     <canvas ref="canvasElement" class="viewer-canvas" />
   </div>
 </template>
-
-<script setup lang="ts" name="Vue3dLoader">
+<script setup lang="ts" name="vue3dLoader">
 import {
   Object3D,
   Vector2,
@@ -33,7 +32,7 @@ import {
 } from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import Stats from "three/examples/jsm/libs/stats.module"
-import { getSize, getCenter, getLoader, getMTLLoader } from "../util/loaderModel"
+import { getSize, getCenter, getLoader, getMTLLoader } from "../util/loadModel"
 import { onMounted, ref, withDefaults, nextTick, watch, onBeforeUnmount } from "vue"
 import type { ICoordinates, IControlsValue, IPlyMaterial, IEncode } from "../types"
 
@@ -287,7 +286,6 @@ function destroyScene() {
   }
   if (renderer) {
     renderer.dispose()
-    renderer = null as any
   }
   if (controls && Object.keys(controls).length > 0) {
     controls.dispose()
@@ -309,7 +307,7 @@ function destroyScene() {
 function init() {
   const {
     filePath,
-    outputEncoding,
+    // outputEncoding,
     webGLRendererOptions,
     showFps,
     enableDamping,
@@ -328,113 +326,60 @@ function init() {
 
   // 初始化画布尺寸
   onResize()
-
-  // WebGLRenderer参数配置
-  const options: WebGLRendererParameters = createWebGLRendererOptions(webGLRendererOptions)
-
-  // 初始化 WebGLRenderer
+  const WEB_GL_OPTIONS = { antialias: true, alpha: true }
+  const options: WebGLRendererParameters = Object.assign({}, WEB_GL_OPTIONS, webGLRendererOptions, {
+    canvas: canvasElement.value as any
+  })
   if (!renderer) {
-    initializeRenderer(options, outputEncoding)
+    renderer = new WebGLRenderer(options)
+    // renderer.hadowMapEnabled = true
+    renderer.shadowMap.enabled = true
+    // const encoding = outputEncoding === "linear" ? 3000 : 3001
+    // renderer.outputEncoding = encoding
   }
 
-  // 初始化 OrbitControls
-  if (!controls) {
-    initializeControls(enableDamping, dampingFactor, el)
+  if (!controls || Object.keys(controls).length <= 0) {
+    controls = new OrbitControls(camera, el)
+    if (enableDamping) {
+      controls.enableDamping = true
+      if (dampingFactor != undefined) {
+        controls.dampingFactor = dampingFactor
+      }
+    }
   }
-
-  // 设置垂直和水平控制
   setVerticalHorizontalControls()
-
-  // 设置坐标轴和网格帮助器
   setAxesAndGridHelper()
-
-  // 加载模型
   loadModelSelect()
-
-  // 启动更新循环
   update()
-
-  // 启用鼠标移动事件
+  // enable mouse move
   enableMousemoveEvent(true)
-
-  // 绑定鼠标事件
-  bindMouseEvents(el)
-
-  // 监听窗口大小变化
+  el.addEventListener("mousedown", onMouseDown, false)
+  el.addEventListener("mouseup", onMouseUp, false)
+  el.addEventListener("click", onClick, false)
+  el.addEventListener("dblclick", onDblclick, false)
   window.addEventListener("resize", onResize, false)
-
-  // 如果需要显示FPS
+  // stats
   if (showFps) {
-    initializeStats(el)
+    stats = new Stats()
+    el.appendChild(stats.dom)
   }
-
-  // 启动动画循环
   animate()
-
-  // 初始化标签
+  // Init labels
   if (labels && labels.length > 0) {
     setSpriteLabel()
   }
 }
 
-// 创建 WebGLRenderer 的配置
-function createWebGLRendererOptions(webGLRendererOptions: any): WebGLRendererParameters {
-  const WEB_GL_OPTIONS = { antialias: true, alpha: true }
-  return Object.assign({}, WEB_GL_OPTIONS, webGLRendererOptions, {
-    canvas: canvasElement.value as any
-  })
-}
-
-// 初始化 WebGLRenderer
-function initializeRenderer(options: WebGLRendererParameters, outputEncoding?: string) {
-  renderer = new WebGLRenderer(options)
-  renderer.shadowMap.enabled = true // 启用阴影映射
-  console.log(outputEncoding, "outputEncoding")
-  // const encoding = outputEncoding === "linear" ? 3000 : 3001
-  // renderer.outputEncoding = encoding
-}
-
-// 初始化 OrbitControls
-function initializeControls(enableDamping: boolean, dampingFactor: number, el: any) {
-  controls = new OrbitControls(camera, el)
-  if (enableDamping) {
-    controls.enableDamping = true
-    if (dampingFactor !== undefined) {
-      controls.dampingFactor = dampingFactor
-    }
-  }
-}
-
-// 绑定鼠标事件
-function bindMouseEvents(el: any) {
-  el.addEventListener("mousedown", onMouseDown, false)
-  el.addEventListener("mouseup", onMouseUp, false)
-  el.addEventListener("click", onClick, false)
-  el.addEventListener("dblclick", onDblclick, false)
-}
-
-// 初始化 FPS 显示
-function initializeStats(el: any) {
-  stats = new Stats()
-  el.appendChild(stats.dom)
-}
-// 设置容器大小
-function setContainerElementStyle(el: HTMLElement) {
-  // 获取 props 中的 width 和 height
+function setContainerElementStyle(el: any) {
   const { width, height } = props
-
-  // 如果 width 存在，设置容器的宽度
   if (width) {
     el.style.width = `${width}px`
   }
-
-  // 如果 height 存在，设置容器的高度
   if (height) {
     el.style.height = `${height}px`
   }
 }
-
-// 2. Toggle mousemove event listener based on `enable` flag.
+// mouse move event listener
 function enableMousemoveEvent(enable: boolean) {
   const el: any = containerElement.value
 
@@ -445,16 +390,11 @@ function enableMousemoveEvent(enable: boolean) {
     el.removeEventListener("mousemove", onMouseMove, false)
   }
 }
-
-// 3. Handle resize event, updating container size if not provided in props.
 function onResize() {
   const { width, height } = props
-
-  // 如果没有设置宽度或高度，则通过容器的实际尺寸来设置
   if (!width || !height) {
     nextTick(() => {
       const el = containerElement.value as any
-
       size.value = {
         width: width || el.offsetWidth,
         height: height || el.offsetHeight
@@ -462,59 +402,34 @@ function onResize() {
     })
   }
 }
-
-// 4. Handle mouse down event. Disable mousemove events and emit mousedown.
 function onMouseDown(event: MouseEvent) {
-  // 禁用 mousemove 事件，避免拖动时不停触发 mousemove
   enableMousemoveEvent(false)
-
-  // 获取鼠标点击位置的交互物体（例如 3D 场景中的对象）
   const intersected = pick(event.clientX, event.clientY)
-
-  // 触发 `mousedown` 事件
   emit("mousedown", event, intersected)
 }
-
-// 5. Handle mouse move event. Emit mousemove with intersected object.
 function onMouseMove(event: MouseEvent) {
   // 获取鼠标移动位置的交互物体
   const intersected = pick(event.clientX, event.clientY)
-
-  // 触发 `mousemove` 事件
   emit("mousemove", event, intersected)
 }
-
-// 6. Handle mouse up event. Emit mouseup and re-enable mousemove events.
 function onMouseUp(event: MouseEvent) {
   // 获取鼠标释放位置的交互物体
   const intersected = pick(event.clientX, event.clientY)
-
-  // 触发 `mouseup` 事件
   emit("mouseup", event, intersected)
 
   // 重新启用 mousemove 事件监听
   enableMousemoveEvent(true)
 }
-
-// 7. Handle click event. Emit click with intersected object.
 function onClick(event: MouseEvent) {
   // 获取点击位置的交互物体
   const intersected = pick(event.clientX, event.clientY)
-
-  // 触发 `click` 事件
   emit("click", event, intersected)
 }
-
-// 8. Handle double click event. Emit dblclick with intersected object.
 function onDblclick(event: MouseEvent) {
   // 获取双击位置的交互物体
   const intersected = pick(event.clientX, event.clientY)
-
-  // 触发 `dblclick` 事件
   emit("dblclick", event, intersected)
 }
-
-// 9. Pick the intersected object at a given mouse position (x, y).
 function pick(x: number, y: number) {
   const obj = getAllObject() // 获取所有可交互的对象
 
@@ -525,8 +440,6 @@ function pick(x: number, y: number) {
   const rect = (containerElement.value as HTMLElement).getBoundingClientRect()
   x -= rect.left
   y -= rect.top
-
-  // 归一化鼠标坐标至 [-1, 1] 范围
   mouse.x = (x / size.value.width) * 2 - 1
   mouse.y = -(y / size.value.height) * 2 + 1
 
@@ -535,7 +448,6 @@ function pick(x: number, y: number) {
 
   // 检查射线是否与对象相交，返回第一个相交的对象
   const intersects = raycaster.intersectObject(obj, props.intersectRecursive)
-
   return (intersects && intersects.length) > 0 ? intersects[0] : null
 }
 
@@ -549,12 +461,9 @@ function update() {
 
 // 2. 更新模型的位置信息、旋转信息和缩放信息
 function updateModel() {
-  if (!object) return // 如果没有对象，直接返回
-
-  const index = isMultipleModels.value ? getObjectIndex(object) : null // 如果有多个模型，获取当前模型的索引
-  const { position, rotation, scale } = props // 解构出传入的位置信息、旋转信息和缩放信息
-
-  // 更新位置
+  if (!object) return
+  const index = isMultipleModels.value ? getObjectIndex(object) : null
+  const { position, rotation, scale } = props
   if (position) {
     // 判断 position 是否为数组，若是数组则处理为多个模型的情况
     if (position instanceof Array) {
@@ -606,8 +515,6 @@ function updateModel() {
 // 3. 更新渲染器设置，包括背景色、分辨率等
 function updateRenderer() {
   const { backgroundColor, backgroundAlpha } = props
-
-  // 更新渲染器尺寸
   renderer.setSize(size.value.width, size.value.height)
 
   // 设置设备像素比，确保在高分辨率设备上渲染清晰
@@ -618,24 +525,20 @@ function updateRenderer() {
   renderer.setClearAlpha(backgroundAlpha as any)
 }
 
-// 4. 更新相机的位置、旋转和视角
+// 更新相机的位置、旋转和视角
 function updateCamera(isResize?: boolean) {
   const { cameraPosition, cameraRotation, cameraUp, cameraLookAt } = props
 
   // 更新相机的宽高比，并更新投影矩阵
   camera.aspect = size.value.width / size.value.height
   camera.updateProjectionMatrix()
-
-  // 如果是窗口大小改变的情况，直接返回，不更新相机
   if (isResize) return
 
   // 如果没有传入 cameraLookAt 和 cameraUp，默认让相机看向物体
   if (!cameraLookAt || !cameraUp) {
-    if (!object) return // 如果没有对象，直接返回
-
-    const distance = getSize(object).length() // 获取物体的大小，用于计算相机与物体的距离
+    if (!object) return
+    const distance = getSize(object).length()
     camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
-
     if (cameraRotation) {
       // 如果有旋转信息，更新相机的旋转
       camera.rotation.set(cameraRotation.x, cameraRotation.y, cameraRotation.z)
@@ -649,9 +552,7 @@ function updateCamera(isResize?: boolean) {
     // 默认相机看向原点
     camera.lookAt(new Vector3())
   } else {
-    // 如果传入了 cameraLookAt 和 cameraUp，则根据这些信息设置相机
     camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
-
     if (cameraRotation) {
       camera.rotation.set(cameraRotation.x, cameraRotation.y, cameraRotation.z)
     }
@@ -663,98 +564,97 @@ function updateCamera(isResize?: boolean) {
     camera.lookAt(new Vector3(cameraLookAt.x, cameraLookAt.y, cameraLookAt.z))
   }
 }
-// 1. 更新光源
+// 更新光源
 function updateLights() {
   const { lights } = props
-
-  // 移除当前场景中的所有光源
   scene.remove(...allLights)
   allLights = []
 
   // 遍历传入的光源数据，动态创建并添加到场景中
   lights.forEach((item: any) => {
-    if (!item.type) return // 如果没有光源类型，跳过
-
-    const type = item.type.toLowerCase() // 获取光源类型并转为小写
-    let light: any = null // 初始化光源变量
-
-    // 2. 环境光源 (Ambient Light)
+    if (!item.type) return
+    const type = item.type.toLowerCase()
+    let light: any = null
+    // 环境光源 (Ambient Light)
     if (type === "ambient" || type === "ambientlight") {
       const color = item.color === 0x000000 ? item.color : item.color || 0x404040
       const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-      light = new AmbientLight(color, intensity) // 创建环境光源
+      light = new AmbientLight(color, intensity)
     }
 
-    // 3. 点光源 (Point Light)
+    // 点光源 (Point Light)
     if (type === "point" || type === "pointlight") {
       const color = item.color === 0x000000 ? item.color : item.color || 0xffffff
       const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
       const distance = item.distance || 0
       const decay = item.decay === 0 ? item.decay : item.decay || 1
-      light = new PointLight(color, intensity, distance, decay) // 创建点光源
+      light = new PointLight(color, intensity, distance, decay)
       if (item.position) {
-        light.position.copy(item.position) // 设置光源位置
+        light.position.copy(item.position)
       }
     }
 
-    // 4. 平行光源 (Directional Light)
+    // 平行光源 (Directional Light)
     if (type === "directional" || type === "directionallight") {
       const color = item.color === 0x000000 ? item.color : item.color || 0xffffff
       const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-      light = new DirectionalLight(color, intensity) // 创建平行光源
+
+      light = new DirectionalLight(color, intensity)
+
       if (item.position) {
-        light.position.copy(item.position) // 设置光源位置
+        light.position.copy(item.position)
       }
+
       if (item.target) {
-        light.target.copy(item.target) // 设置光源目标
+        light.target.copy(item.target)
       }
     }
 
-    // 5. 半球光源 (Hemisphere Light)
+    // 半球光源 (Hemisphere Light)
     if (type === "hemisphere" || type === "hemispherelight") {
       const skyColor = item.skyColor === 0x000000 ? item.skyColor : item.skyColor || 0xffffff
       const groundColor =
         item.groundColor === 0x000000 ? item.groundColor : item.groundColor || 0xffffff
       const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-      light = new HemisphereLight(skyColor, groundColor, intensity) // 创建半球光源
+
+      light = new HemisphereLight(skyColor, groundColor, intensity)
+
       if (item.position) {
-        light.position.copy(item.position) // 设置光源位置
+        light.position.copy(item.position)
       }
     }
 
-    // 6. 如果光源有效，则将其添加到场景中
+    // 如果光源有效，则将其添加到场景中
     if (light) {
-      allLights.push(light) // 将光源添加到光源数组中
-      scene.add(light) // 将光源添加到场景
+      allLights.push(light)
+      scene.add(light)
     }
   })
 }
 
-// 7. 更新控制器
+// 更新控制器
 function updateControls() {
   const { controlsOptions } = props
-
-  // 如果传入了控制器选项，则更新控制器的配置
   if (controlsOptions) {
-    Object.assign(controls, controlsOptions) // 使用 Object.assign 合并控制器的配置
+    Object.assign(controls, controlsOptions)
   }
 }
 
-// 8. 加载选择的模型
+// 加载选择的模型
 function loadModelSelect() {
   const { filePath, parallelLoad } = props
-
-  // 如果启用了并行加载且是多个模型
+  // If enable parallel load
   if (parallelLoad && isMultipleModels) {
     ;(filePath as any).forEach((path: string, index: number) => {
-      load(index) // 根据模型索引加载模型
+      // 根据模型索引加载模型
+      load(index)
     })
   } else {
-    load() // 否则加载单个模型
+    // 否则加载单个模型
+    load()
   }
 }
 function load(fileIndex?: number) {
-  // 解构获取必要的 props 参数
   const {
     filePath,
     fileType,
@@ -765,11 +665,7 @@ function load(fileIndex?: number) {
     dracoDir,
     plyMaterial
   } = props
-
-  // 如果没有文件路径，则直接返回
   if (!filePath) return
-
-  // 确定文件的索引，使用传入的 fileIndex 或默认的 loaderIndex
   const index = fileIndex || loaderIndex.value
 
   // 根据是否是多个模型，确定文件路径的类型
@@ -785,11 +681,8 @@ function load(fileIndex?: number) {
     plyMaterial,
     dracoDir
   ) // {loader, getObject, mtlLoader}
-
-  loader = loaderObject3d.loader // 获取 loader
-  const getObjectFun = loaderObject3d.getObject ? loaderObject3d.getObject : getObject // 获取获取对象的函数
-
-  // 如果场景中已经有对象，并且是第一个模型，则移除之前的对象
+  loader = loaderObject3d.loader
+  const getObjectFun = loaderObject3d.getObject ? loaderObject3d.getObject : getObject
   if (object && index === 0) {
     scene.remove(object)
   }
@@ -804,17 +697,17 @@ function load(fileIndex?: number) {
 
   // 如果存在 mtlPath，则加载材质
   if (mtlPath) {
-    const isMultipleMTL = typeof mtlPath === "object" // 判断是否是多个材质
+    // load materials
+    const isMultipleMTL = typeof mtlPath === "object"
     if (!isMultipleMTL) {
       // 如果是单一材质，直接加载
       loadMtl(filePathString, getObjectFun, index)
     } else {
-      // 如果有多个材质，加载对应的材质和模型
       if (!mtlPath[index]) {
-        loadFilePath(filePathString, getObjectFun, index) // 没有材质时直接加载模型
+        loadFilePath(filePathString, getObjectFun, index)
         return
       }
-      loadMtl(filePathString, getObjectFun, index) // 加载材质
+      loadMtl(filePathString, getObjectFun, index)
     }
   } else {
     // 如果没有材质，则直接加载模型
@@ -825,24 +718,20 @@ function load(fileIndex?: number) {
 // 加载文件路径的函数
 function loadFilePath(filePath: string, getObject: any, index: number) {
   const { textureImage, parallelLoad } = props
-
-  // 使用 loader 加载文件
   loader.load(
     filePath,
     (...args: any) => {
-      const obj = getObject(...args) // 获取加载后的对象
+      const obj = getObject(...args)
       object = obj
-      addObject(object, filePath) // 将对象添加到场景中
-
+      // 将对象添加到场景中
+      addObject(object, filePath)
       // 如果需要加载纹理，设置纹理
       if (textureImage) {
         const _texture = typeof textureImage === "string" ? textureImage : textureImage[index]
         if (_texture) {
-          addTexture(object, _texture) // 添加纹理到对象
+          addTexture(object, _texture)
         }
       }
-
-      // 触发加载完成事件
       emit("load", scene)
     },
     (event: ProgressEvent) => {
@@ -851,10 +740,10 @@ function loadFilePath(filePath: string, getObject: any, index: number) {
         onProcess(event)
       }
       const modelIndex = loaderIndex.value + 1
-      emit("process", event, modelIndex) // 触发加载进度事件
+      emit("process", event, modelIndex)
     },
     (error: ErrorEvent) => {
-      emit("error", error) // 触发加载错误事件
+      emit("error", error)
     }
   )
 }
@@ -865,8 +754,6 @@ function loadMtl(filePath: string, getObject: any, index: number) {
 
   // 获取材质加载器
   const mtlLoader = getMTLLoader()
-
-  // 设置跨域和请求头（如果有）
   if (crossOrigin) {
     mtlLoader.setCrossOrigin(crossOrigin)
   }
@@ -877,35 +764,34 @@ function loadMtl(filePath: string, getObject: any, index: number) {
   // 获取对应索引的材质路径
   const mtl = typeof mtlPath === "string" ? mtlPath : mtlPath[index]
   const mtlPathArray: any = /^(.*\/)([^/]*)$/.exec(mtl)
-  const path = mtlPathArray[1] // 获取路径
-  const file = mtlPathArray[2] // 获取文件名
-
+  const path = mtlPathArray[1]
+  const file = mtlPathArray[2]
   // 设置材质加载器的路径并加载材质
   mtlLoader.setPath(path).load(file, (materials: any) => {
-    materials.preload() // 预加载材质
-    loader.setMaterials(materials) // 将材质应用到加载器中
-    loadFilePath(filePath, getObject, index) // 加载文件路径
+    materials.preload()
+    loader.setMaterials(materials)
+    loadFilePath(filePath, getObject, index)
   })
 }
-// 获取对象
 function getObject(object: any) {
   return object
 }
 
 // 向场景中添加对象
 function addObject(obj: Object3D, filePath: string) {
-  const center = getCenter(object) // 获取对象的中心点
+  // 获取对象的中心点位置
+  const center = getCenter(object)
 
   // 只在加载第一个模型时设置场景的位置信息，防止每次加载模型时修改场景位置
   if (!objectPositionHasSet.value) {
-    scene.position.copy(center.negate()) // 设置场景位置为负的中心点
-    objectPositionHasSet.value = true // 标记已经设置过位置
+    scene.position.copy(center.negate())
+    // 标记已经设置过位置
+    objectPositionHasSet.value = true
   }
-
-  object = obj // 将传入的对象赋值给当前对象
-
+  object = obj
   // 提取文件名并赋值给对象
-  let fileName = filePath.split("/").pop() // 获取文件路径中的文件名
+  let fileName: any = filePath.split("/")
+  fileName = fileName[fileName.length - 1]
   object.fileName = fileName
 
   // 将对象添加到场景中
@@ -921,26 +807,23 @@ function addObject(obj: Object3D, filePath: string) {
 
 // 动画更新函数
 function animate() {
-  requestAnimationId = requestAnimationFrame(animate) // 循环调用动画帧
-  updateStats() // 更新性能统计
-
-  const delta = clock.getDelta() // 获取上一帧与当前帧之间的时间差
-
-  // 更新动画混合器
-  if (mixers) {
-    if (mixers instanceof AnimationMixer) {
-      mixers.update(delta) // 单个动画混合器更新
-    } else if (Array.isArray(mixers)) {
-      mixers.forEach((m: any) => m.update(delta)) // 多个动画混合器更新
-    }
+  requestAnimationId = requestAnimationFrame(animate)
+  updateStats()
+  const delta = clock.getDelta()
+  // update play animations
+  if (mixers && mixers instanceof AnimationMixer) {
+    mixers.update(delta)
+  }
+  if (mixers && mixers instanceof Array) {
+    mixers.forEach((m: any) => {
+      m.update(delta)
+    })
   }
 
   // 更新控制器
   if (controls) {
     controls.update()
   }
-
-  // 渲染场景
   render()
 }
 
@@ -960,8 +843,6 @@ function render() {
 // 更新性能统计
 function updateStats() {
   const { showFps } = props
-
-  // 如果需要显示帧率，则更新性能统计
   if (showFps) {
     stats.update()
   }
@@ -970,10 +851,7 @@ function updateStats() {
 // 处理加载进度
 function onProcess(xhr: ProgressEvent) {
   const { filePath } = props
-
-  // 计算加载进度百分比
   let process = Math.floor((xhr.loaded / xhr.total) * 100)
-
   if (process === 100) {
     // 加载完成时的处理逻辑
     if (isMultipleModels.value && filePath.length > loaderIndex.value) {
@@ -981,13 +859,13 @@ function onProcess(xhr: ProgressEvent) {
       nextTick(() => {
         loaderIndex.value++
         if (loaderIndex.value === filePath.length) {
-          loaderIndex.value = 0 // 加载完毕，重置索引
+          loaderIndex.value = 0
           return
         }
-        load() // 加载下一个模型
+        load()
       })
     } else {
-      loaderIndex.value = 0 // 如果只有一个模型，重置索引
+      loaderIndex.value = 0
     }
   }
 }
@@ -995,22 +873,19 @@ function onProcess(xhr: ProgressEvent) {
 // 向对象添加纹理
 function addTexture(object: Object3D, texture: any) {
   if (!textureLoader) {
-    textureLoader = new TextureLoader() // 如果没有创建过纹理加载器，则创建一个
+    textureLoader = new TextureLoader()
   }
-
-  // 遍历对象中的每一个子对象，找到网格并加载纹理
   object.traverse((child: any) => {
     if (child.isMesh) {
-      // 如果是网格对象
       textureLoader.load(
         texture,
         (_texture: any) => {
-          child.material.map = _texture // 设置纹理到网格的材质上
-          child.material.needsUpdate = true // 通知材质更新
+          child.material.map = _texture
+          child.material.needsUpdate = true
         },
-        () => {}, // 加载进度的回调（这里未做处理）
+        () => {},
         (err: any) => {
-          emit("error", err) // 出现错误时触发 error 事件
+          emit("error", err)
         }
       )
     }
@@ -1019,117 +894,99 @@ function addTexture(object: Object3D, texture: any) {
 
 // 清空场景
 function clearWholeScene() {
-  scene.clear() // 清空场景中的所有对象
+  scene.clear()
 }
 
 // 设置对象的属性（例如位置、缩放、旋转等）
 function setObjectAttribute(type: string, val: any) {
-  const obj = getAllObject() // 获取对象（场景或单个对象）
-  if (!obj) return // 如果没有对象，直接返回
-
+  const obj = getAllObject()
+  if (!obj) return
   if (isMultipleModels.value) {
-    // 如果是多个模型
     obj.children.forEach((item: any) => {
-      // 遍历每个子对象
-      const index = getObjectIndex(item) // 获取当前子对象的索引
-      const v = type === "scale" ? 1 : 0 // 如果是缩放属性，设置为1，否则设置为0
-      // 如果索引对应的值存在，设置对应的属性，否则设置默认值
+      const index = getObjectIndex(item)
+      const v = type === "scale" ? 1 : 0
       val[index]
         ? item[type].set(val[index].x, val[index].y, val[index].z)
         : item[type].set(v, v, v)
     })
     return
   }
-  // 如果是单个模型，直接设置属性
   obj[type].set(val.x, val.y, val.z)
 }
 
 // 获取场景中的所有对象
 function getAllObject() {
-  return isMultipleModels.value ? scene : object // 如果是多个模型，返回场景对象，否则返回单个对象
+  // 如果是多个模型，返回场景对象，否则返回单个对象
+  return isMultipleModels.value ? scene : object
 }
-
-// 设置精灵标签
 function setSpriteLabel() {
-  const { labels } = props // 获取标签数据
-  if (!labels || labels.length <= 0) return // 如果没有标签，直接返回
-
-  clearSprite() // 清空已有的精灵标签
-
-  // 获取对象（场景或单个对象）
+  const { labels } = props
+  if (!labels || labels.length <= 0) return
+  clearSprite()
   const obj = isMultipleModels.value ? scene : object
-
-  // 加载图片纹理
   const spriteImageLabel = (image: any) => {
     if (!textureLoader) {
-      textureLoader = new TextureLoader() // 如果没有创建纹理加载器，则创建一个
+      textureLoader = new TextureLoader()
     }
-    const imageTexture = textureLoader.load(image) // 加载图片纹理
+    const imageTexture = textureLoader.load(image)
     return imageTexture
   }
 
   // 生成文本纹理
   const spriteTextLabel = (text: string, style: object) => {
-    const canvas = generateCanvas(text, style) // 生成画布
-    const texture = new Texture(canvas) // 创建纹理
-    texture.needsUpdate = true // 标记纹理需要更新
+    const canvas = generateCanvas(text, style)
+    const texture = new Texture(canvas)
+    texture.needsUpdate = true
     return texture
   }
 
-  // 遍历所有标签并添加到场景中
   labels.forEach((item: any) => {
     const spriteMap = item.image
-      ? spriteImageLabel(item.image) // 如果有图片，加载图片纹理
-      : spriteTextLabel(item.text, item.textStyle || {}) // 否则，生成文本纹理
-
+      ? spriteImageLabel(item.image)
+      : spriteTextLabel(item.text, item.textStyle || {})
     const spriteMaterial = new SpriteMaterial({
-      map: spriteMap, // 设置纹理
-      color: item.spriteMaterialColor || 0xffffff // 设置精灵材质颜色
+      map: spriteMap,
+      color: item.spriteMaterialColor || 0xffffff
+      // useScreenCoordinates: false
+      // alignment: spriteAlignment
     })
-    const sprite: any = new Sprite(spriteMaterial) // 创建精灵
+    const sprite: any = new Sprite(spriteMaterial)
 
-    // 设置精灵的缩放
+    // 设置缩放
     if (item.scale) {
-      sprite.scale.set(item.scale.x || 1, item.scale.y || 1, item.scale.z || 0) // 设置缩放
+      sprite.scale.set(item.scale.x || 1, item.scale.y || 1, item.scale.z || 0)
     } else {
-      sprite.scale.set(1, 1, 0) // 默认缩放
+      sprite.scale.set(1, 1, 0)
     }
-
-    // 设置精灵的位置
+    // 设置位置
     if (item.position) {
       sprite.position.set(item.position.x, item.position.y, item.position.z)
     }
 
-    // 设置精灵的SID（唯一标识符）
+    // 设置SID（唯一标识符）
     if (item.sid) {
       sprite.sid = item.sid
     }
-
-    obj.add(sprite) // 将精灵添加到场景或对象中
+    obj.add(sprite)
   })
 }
-
-// 清除场景中的所有精灵标签
 function clearSprite() {
-  const sceneChildren = scene.children // 获取场景中的所有子对象
-
+  const sceneChildren = scene.children
   for (let i = sceneChildren.length - 1; i >= 0; i--) {
-    // 从后往前遍历
     const item = sceneChildren[i]
     if (item) {
-      // 如果是组对象且包含子对象，移除组内的精灵
+      // If have only one model the Sprite in Group
       if (item instanceof Group && item.children) {
         scene.children[i].children = item.children
           .map((_item: any) => {
             if (_item instanceof Sprite) {
-              return null // 如果是精灵，返回 null
+              return null
             }
-            return _item // 否则，保留原对象
+            return _item
           })
-          .filter((item: any) => item) // 过滤掉 null 值
+          .filter((item: any) => item)
       }
-
-      // 如果是精灵，直接从场景中移除
+      // If have multiple models the Sprite in children
       if (item instanceof Sprite) {
         scene.remove(item)
       }
@@ -1138,7 +995,6 @@ function clearSprite() {
 }
 // 生成包含文本的 Canvas 元素
 function generateCanvas(text: string, style: any) {
-  // 绘制圆角矩形的函数
   const roundRect = (ctx: any, x: number, y: number, w: number, h: number, r: number) => {
     ctx.beginPath()
     ctx.moveTo(x + r, y)
@@ -1154,37 +1010,28 @@ function generateCanvas(text: string, style: any) {
     ctx.fill()
     ctx.stroke()
   }
-
-  // 从样式中获取设置，如果没有则使用默认值
-  const fontFamily = style.fontFamily || "Arial" // 字体
-  const fontSize = style.fontSize || 18 // 字号，默认 18px
-  const fontColor = style.color || "#ffffff" // 字体颜色，默认白色
-  const fontWeight = style.fontWeight || "normal" // 字体粗细，默认普通
-  const borderWidth = style.borderWidth || 4 // 边框宽度，默认 4px
-  const borderColor = style.borderColor || "rgba(0,0,0,1)" // 边框颜色，默认黑色
-  const borderRadius = style.borderRadius || 4 // 边框圆角，默认 4px
-  const backgroundColor = style.backgroundColor || "rgba(255, 255, 255, 1)" // 背景色，默认白色
-
-  // 创建 canvas 元素，并获取 2D 上下文
+  const fontFamily = style.fontFamily || "Arial"
+  const fontSize = style.fontSize === 0 || style.fontSize ? style.fontSize : 18
+  const fontColor = style.color || "#ffffff"
+  const fontWeight = style.fontWeight || "normal"
+  const borderWidth = style.borderWidth === 0 || style.borderWidth ? style.borderWidth : 4
+  const borderColor = style.borderColor || "rgba(0,0,0,1)"
+  const borderRadius = style.borderRadius === 0 || style.borderRadius ? style.borderRadius : 4
+  const backgroundColor = style.backgroundColor || "rgba(255, 255, 255, 1)"
   const canvas = document.createElement("canvas")
   const context = canvas.getContext("2d")
-
   if (context) {
-    // 设置字体样式
     context.font = `${fontWeight} ${fontSize}px ${fontFamily}`
-
-    // 获取文本的宽度
+    // get size data (height depends only on font size)
     const metrics = context.measureText(text)
     const textWidth = metrics.width
 
-    // 设置背景色
+    // 设置填充色
     context.fillStyle = backgroundColor
 
     // 设置边框颜色和宽度
     context.strokeStyle = borderColor
     context.lineWidth = borderWidth
-
-    // 绘制带圆角的矩形
     roundRect(
       context,
       borderWidth / 2,
@@ -1193,16 +1040,13 @@ function generateCanvas(text: string, style: any) {
       fontSize * 1.4 + borderWidth,
       borderRadius
     )
-
-    // 设置文本颜色并绘制文本
+    // text color
     context.fillStyle = fontColor
     context.fillText(text, borderWidth, fontSize + borderWidth)
   }
-
-  return canvas // 返回生成的 canvas 元素
+  return canvas
 }
-
-// 获取对象在文件路径数组中的索引
+// Get object index
 function getObjectIndex(object: any) {
   const { filePath } = props
   let objIndex: any
@@ -1215,144 +1059,123 @@ function getObjectIndex(object: any) {
           return index
         }
       })
-      .filter(i => i != undefined)[0] // 过滤 undefined 并返回第一个匹配的索引
+      .filter(i => i != undefined)[0]
   }
-
   return objIndex
 }
 
 // 播放动画函数
 function playAnimations() {
-  const obj = getAllObject() // 获取所有对象
-
-  if (!obj) return // 如果没有对象，直接返回
-
+  const obj = getAllObject()
+  if (!obj) return
+  // 如果是多个模型，播放多个模型的动画
   if (isMultipleModels.value) {
-    playMultipleModels(obj) // 如果是多个模型，播放多个模型的动画
+    playMultipleModels(obj)
     return
   }
-
-  playSingleModel(obj) // 否则播放单个模型的动画
+  playSingleModel(obj)
 }
-
-// 播放单个模型动画
+// play a single model animation
 function playSingleModel(item: Object3D) {
-  const { autoPlay } = props // 获取是否自动播放的设置
-  mixers = new AnimationMixer(item) // 创建动画混合器
-
-  // 如果模型有动画，则为每个动画设置动作
+  const { autoPlay } = props
+  mixers = new AnimationMixer(item)
   if (item.animations && item.animations.length > 0) {
     item.animations.forEach((clip: AnimationClip) => {
       if (clip) {
         const action = (mixers as AnimationMixer).clipAction(clip)
         if (autoPlay) {
-          action.play() // 如果设置为自动播放，则播放动画
+          action.play()
         } else {
-          action.stop() // 否则停止动画
+          action.stop()
         }
       }
     })
   }
 }
-
-// 播放多个模型动画
+// play multiple models animation
 function playMultipleModels(obj: Object3D) {
-  const { autoPlay } = props // 获取是否自动播放的设置
-  mixers = [] // 初始化动画混合器数组
-
-  // 遍历每个子模型，为每个子模型创建动画混合器并播放动画
+  const { autoPlay } = props
+  mixers = []
   obj.children.forEach((item: any, index: number) => {
-    ;(mixers as AnimationMixer[]).push(new AnimationMixer(item)) // 创建动画混合器并推入数组
+    ;(mixers as AnimationMixer[]).push(new AnimationMixer(item))
     if (item.animations && item.animations.length > 0) {
       item.animations.forEach((clip: AnimationClip) => {
         if (clip) {
           const action = (mixers as AnimationMixer[])[index].clipAction(clip)
           if (autoPlay) {
-            action.play() // 如果设置为自动播放，则播放动画
+            action.play()
           } else {
-            action.stop() // 否则停止动画
+            action.stop()
           }
         }
       })
     }
   })
 }
-// 设置垂直和水平控制
+// set vertical horizontal controls
 function setVerticalHorizontalControls() {
   if (!controls) {
-    return // 如果 controls 对象不存在，直接返回
+    return
   }
-
   const { verticalCtrl, horizontalCtrl, minDistance, maxDistance } = props
-
-  // 设置垂直控制
-  if (verticalCtrl) {
-    if (typeof verticalCtrl === "boolean") {
-      // 如果 verticalCtrl 是布尔值，则禁用垂直旋转（锁定角度范围为 -2π 到 2π）
-      controls.minAzimuthAngle = -2 * Math.PI
-      controls.maxAzimuthAngle = -2 * Math.PI
-    } else if (typeof verticalCtrl === "object") {
-      // 如果 verticalCtrl 是对象，设置自定义的最小和最大水平旋转角度
-      controls.minAzimuthAngle = verticalCtrl.min
-      controls.maxAzimuthAngle = verticalCtrl.max
-    }
+  // set vertical
+  if (verticalCtrl && typeof verticalCtrl === "boolean") {
+    controls.minAzimuthAngle = -2 * Math.PI
+    controls.maxAzimuthAngle = -2 * Math.PI
   }
-
+  if (verticalCtrl && typeof verticalCtrl === "object") {
+    // min/max azimuth angle value range [-2 * Math.PI，2 * Math.PI]
+    controls.minAzimuthAngle = verticalCtrl.min
+    controls.maxAzimuthAngle = verticalCtrl.max
+  }
   // 设置水平控制
-  if (horizontalCtrl) {
-    if (typeof horizontalCtrl === "boolean") {
-      // 如果 horizontalCtrl 是布尔值，锁定极角角度为固定值
-      controls.minPolarAngle = 1
-      controls.maxPolarAngle = 1
-    } else if (typeof horizontalCtrl === "object") {
-      // 如果 horizontalCtrl 是对象，设置自定义的最小和最大极角值
-      controls.minPolarAngle = horizontalCtrl.min
-      controls.maxPolarAngle = horizontalCtrl.max
-    }
+  if (horizontalCtrl && typeof horizontalCtrl === "boolean") {
+    controls.minPolarAngle = 1
+    controls.maxPolarAngle = 1
   }
-
-  // 设置最小距离和最大距离
-  if (typeof minDistance === "number" && minDistance !== 0) {
-    controls.minDistance = minDistance // 如果 minDistance 是数字且不为 0，则设置最小距离
+  if (horizontalCtrl && typeof horizontalCtrl === "object") {
+    // min/max azimuth angle value range [0，Math.PI]
+    controls.minPolarAngle = horizontalCtrl.min
+    controls.maxPolarAngle = horizontalCtrl.max
   }
-  if (typeof maxDistance === "number" && maxDistance !== Infinity) {
-    controls.maxDistance = maxDistance // 如果 maxDistance 是数字且不为 Infinity，则设置最大距离
+  if (minDistance != 0 && typeof minDistance === "number") {
+    controls.minDistance = minDistance
+  }
+  if (maxDistance != Infinity && typeof maxDistance === "number") {
+    controls.maxDistance = maxDistance
   }
 }
-
-// 设置坐标轴和网格助手
+// set axes and grid helper
 function setAxesAndGridHelper() {
   const { enableAxesHelper, enableGridHelper, axesHelperSize } = props
 
   // 如果启用坐标轴助手，则添加坐标轴
   if (enableAxesHelper) {
-    axesHelper = new AxesHelper(axesHelperSize) // AxesHelperSize 是坐标轴的大小，红色代表 x 轴，绿色代表 y 轴，蓝色代表 z 轴
-    scene.add(axesHelper) // 将坐标轴助手添加到场景中
+    // add axes
+    axesHelper = new AxesHelper(axesHelperSize) // axesHelperSize is axes size，red: x, green: y, blue: z
+    scene.add(axesHelper)
   } else {
     if (axesHelper) {
-      scene.remove(axesHelper) // 如果已存在坐标轴助手，则从场景中移除
+      scene.remove(axesHelper)
     }
   }
 
   // 如果启用网格助手，则添加网格
   if (enableGridHelper) {
-    gridHelper = new GridHelper(2000, 100) // 网格的大小为 2000，分为 100 格
-    scene.add(gridHelper) // 将网格助手添加到场景中
+    gridHelper = new GridHelper(2000, 100)
+    scene.add(gridHelper)
   } else {
     if (gridHelper) {
-      scene.remove(gridHelper) // 如果已存在网格助手，则从场景中移除
+      scene.remove(gridHelper)
     }
   }
 }
 
 // 光源跟随相机
 function setLightFollowCamera() {
-  const vector = camera.position.clone() // 克隆相机的位置，确保光源位置与相机同步
-
-  // 遍历场景中的所有对象，查找 PointLight 类型的光源
+  const vector = camera.position.clone()
   scene.children.forEach((item: any) => {
     if (item instanceof PointLight) {
-      // 如果是 PointLight，则将光源的位置设置为相机的位置
       item.position.set(vector.x, vector.y, vector.z)
     }
   })
@@ -1364,7 +1187,24 @@ defineExpose({
   scene
 })
 </script>
+<style scoped>
+.viewer-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
 
-<style scoped lang="scss">
-@use "./style.scss";
+.viewer-container div {
+  position: absolute !important;
+  left: 0px !important;
+  opacity: 1 !important;
+}
+
+.viewer-canvas {
+  width: 100%;
+  height: 100%;
+}
 </style>
