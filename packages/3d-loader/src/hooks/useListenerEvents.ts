@@ -100,19 +100,21 @@ export function useListenerEvents({
 
   function addEventsLinstener() {
     enableMousemoveEvent(true)
-    unref(ElRef)?.addEventListener("mousedown", onMouseDown, false)
-    unref(ElRef)?.addEventListener("mouseup", onMouseUp, false)
-    unref(ElRef)?.addEventListener("click", onClick, false)
-    unref(ElRef)?.addEventListener("dblclick", onDblclick, false)
+    const el = unref(ElRef) as HTMLElement
+    el.addEventListener("mousedown", onMouseDown, false)
+    el.addEventListener("mouseup", onMouseUp, false)
+    el.addEventListener("click", onClick, false)
+    el.addEventListener("dblclick", onDblclick, false)
     window.addEventListener("resize", onResize, false)
   }
 
   function removeEventsListener() {
-    unref(ElRef)?.removeEventListener("mousedown", onMouseDown, false)
-    unref(ElRef)?.removeEventListener("mousemove", onMouseMove, false)
-    unref(ElRef)?.removeEventListener("mouseup", onMouseUp, false)
-    unref(ElRef)?.removeEventListener("click", onClick, false)
-    unref(ElRef)?.removeEventListener("dblclick", onDblclick, false)
+    const el = unref(ElRef) as HTMLElement
+    el.removeEventListener("mousedown", onMouseDown, false)
+    el.removeEventListener("mousemove", onMouseMove, false)
+    el.removeEventListener("mouseup", onMouseUp, false)
+    el.removeEventListener("click", onClick, false)
+    el.removeEventListener("dblclick", onDblclick, false)
     window.removeEventListener("resize", onResize, false)
   }
 
