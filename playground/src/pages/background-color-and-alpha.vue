@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 </script>
-<style>
+<style scoped>
 .content {
   position: relative;
 }
@@ -28,8 +28,8 @@
 }
 .text {
   z-index: 0;
-  font-size: 60px;
-  width: 100%;
+  font-size: 20px;
+  width: 300px;
   text-align: center;
 }
 .model {

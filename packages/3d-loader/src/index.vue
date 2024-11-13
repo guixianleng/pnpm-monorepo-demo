@@ -11,17 +11,12 @@ import {
   Color,
   WebGLRenderer,
   PerspectiveCamera,
-  AmbientLight,
-  PointLight,
-  HemisphereLight,
-  DirectionalLight,
   Texture,
   TextureLoader,
   Clock,
   Sprite,
   SpriteMaterial,
   WebGLRendererParameters,
-  Light,
   Group
 } from "three"
 import { onMounted, ref, watch, onBeforeUnmount, computed } from "vue"
@@ -33,7 +28,8 @@ import { useAssistHelper } from "./hooks/useAssistHelper"
 import { useAnimations } from "./hooks/useAnimations"
 import { useListenerEvents } from "./hooks/useListenerEvents"
 import { useProcess } from "./hooks/useOnprocess"
-import { useContrls } from "./hooks/useSetControls"
+import { useControls } from "./hooks/useSetControls"
+import { useLights } from "./hooks/useLights"
 
 const props = defineProps(baseProps)
 
@@ -46,7 +42,6 @@ let scene: Scene = new Scene()
 const camera = new PerspectiveCamera(45, 1, 0.1, 100000)
 const clock = new Clock()
 let renderer: WebGLRenderer = null as any
-let allLights: Light[] = []
 let loader: any = null
 let requestAnimationId: number = 0
 let textureLoader: any = null
@@ -85,9 +80,9 @@ const {
   setVerticalHorizontalControls,
   destroyControls,
   controlsUpdate
-} = useContrls({
-  getProps
-})
+} = useControls({ getProps })
+// 光源相关
+const { updateLights, setLightFollowCamera } = useLights({ getProps, scene })
 
 onMounted(() => {
   init()
@@ -282,12 +277,12 @@ function setContainerElementStyle(el: HTMLElement) {
   }
 }
 
-// 1. 更新渲染器、相机、光源和控制器
+// 更新渲染器、相机、光源和控制器
 function update() {
-  updateRenderer() // 更新渲染器设置
-  updateCamera() // 更新相机位置和旋转
-  updateLights() // 更新光源
-  updateControls() // 更新控制器
+  updateRenderer()
+  updateCamera()
+  updateLights()
+  updateControls()
 }
 
 // 更新模型的位置信息、旋转信息和缩放信息
@@ -343,7 +338,7 @@ function updateModel() {
   }
 }
 
-// 3. 更新渲染器设置，包括背景色、分辨率等
+// 更新渲染器设置，包括背景色、分辨率等
 function updateRenderer() {
   const { backgroundColor, backgroundAlpha } = props
   renderer.setSize(size.value.width, size.value.height)
@@ -396,72 +391,6 @@ function updateCamera(isResize?: boolean) {
   }
 }
 // 更新光源
-function updateLights() {
-  const { lights } = props
-  scene.remove(...allLights)
-  allLights = []
-
-  // 遍历传入的光源数据，动态创建并添加到场景中
-  lights.forEach((item: any) => {
-    if (!item.type) return
-    const type = item.type.toLowerCase()
-    let light: any = null
-    // 环境光源 (Ambient Light)
-    if (type === "ambient" || type === "ambientlight") {
-      const color = item.color === 0x000000 ? item.color : item.color || 0x404040
-      const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-      light = new AmbientLight(color, intensity)
-    }
-
-    // 点光源 (Point Light)
-    if (type === "point" || type === "pointlight") {
-      const color = item.color === 0x000000 ? item.color : item.color || 0xffffff
-      const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-      const distance = item.distance || 0
-      const decay = item.decay === 0 ? item.decay : item.decay || 1
-      light = new PointLight(color, intensity, distance, decay)
-      if (item.position) {
-        light.position.copy(item.position)
-      }
-    }
-
-    // 平行光源 (Directional Light)
-    if (type === "directional" || type === "directionallight") {
-      const color = item.color === 0x000000 ? item.color : item.color || 0xffffff
-      const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-
-      light = new DirectionalLight(color, intensity)
-
-      if (item.position) {
-        light.position.copy(item.position)
-      }
-
-      if (item.target) {
-        light.target.copy(item.target)
-      }
-    }
-
-    // 半球光源 (Hemisphere Light)
-    if (type === "hemisphere" || type === "hemispherelight") {
-      const skyColor = item.skyColor === 0x000000 ? item.skyColor : item.skyColor || 0xffffff
-      const groundColor =
-        item.groundColor === 0x000000 ? item.groundColor : item.groundColor || 0xffffff
-      const intensity = item.intensity === 0 ? item.intensity : item.intensity || 1
-
-      light = new HemisphereLight(skyColor, groundColor, intensity)
-
-      if (item.position) {
-        light.position.copy(item.position)
-      }
-    }
-
-    // 如果光源有效，则将其添加到场景中
-    if (light) {
-      allLights.push(light)
-      scene.add(light)
-    }
-  })
-}
 
 // 加载选择的模型
 function loadModelSelect() {
@@ -654,7 +583,7 @@ function render() {
 
   // 如果启用点光源跟随相机，则设置光源跟随相机
   if (pointLightFollowCamera) {
-    setLightFollowCamera()
+    setLightFollowCamera(camera)
   }
 
   // 渲染场景和相机
@@ -796,16 +725,6 @@ function getObjectIndex(object: any) {
       .filter(i => i != undefined)[0]
   }
   return objIndex
-}
-
-// 光源跟随相机
-function setLightFollowCamera() {
-  const vector = camera.position.clone()
-  scene.children.forEach((item: any) => {
-    if (item instanceof PointLight) {
-      item.position.set(vector.x, vector.y, vector.z)
-    }
-  })
 }
 
 // 导出公共变量，供外部访问

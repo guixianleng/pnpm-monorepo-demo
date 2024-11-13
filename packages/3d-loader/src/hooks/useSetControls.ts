@@ -8,7 +8,7 @@ interface IControlsContext {
 
 let controls: OrbitControls = {} as any
 
-export function useContrls({ getProps }: IControlsContext) {
+export function useControls({ getProps }: IControlsContext) {
   // 初始化控制器
   function initControls(camera: any, el: HTMLElement) {
     const { enableDamping, dampingFactor } = unref(getProps)
