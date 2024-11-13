@@ -12,29 +12,31 @@
         </li>
       </ul>
     </div>
-    <loadAModelVue v-if="currentMenuId === 1" />
-    <loadMultipleModelsVue v-if="currentMenuId === 2" />
-    <heightAndWidthVue v-if="currentMenuId === 3" />
-    <materialsAndTexturesVue v-if="currentMenuId === 4" />
-    <backgroundColorAndAlphaVue v-if="currentMenuId === 5" />
-    <interactiveControlsVue v-if="currentMenuId === 6" />
-    <rotateModelVue v-if="currentMenuId === 7" />
-    <eventModelVue v-if="currentMenuId === 8" />
-    <lightModelVue v-if="currentMenuId === 9" />
-    <showFpsVue v-if="currentMenuId === 10" />
-    <cameraPositionAndRotateVue v-if="currentMenuId === 11" />
-    <processBarVue v-if="currentMenuId === 12" />
-    <parallelLoadModelsVue v-if="currentMenuId === 13" />
-    <addLabelVue v-if="currentMenuId === 14" />
-    <loadJsonModelVue v-if="currentMenuId === 15" />
-    <disableAnimationsVue v-if="currentMenuId === 16" />
-    <loaderDracoModelVue v-if="currentMenuId === 17" :lang="lang" />
-    <enableDampingVue v-if="currentMenuId === 18" />
-    <setVerticalHorizontal v-if="currentMenuId === 19" />
-    <enableAxesGrid v-if="currentMenuId === 20"/>
-    <minMaxDistance v-if="currentMenuId === 21"/>
-    <pointLightFollowCamera v-if="currentMenuId === 22" />
-    <cloneSameObj v-if="currentMenuId === 23" />
+    <div class="container">
+      <loadAModelVue v-if="currentMenuId === 1" />
+      <loadMultipleModelsVue v-if="currentMenuId === 2" />
+      <heightAndWidthVue v-if="currentMenuId === 3" />
+      <materialsAndTexturesVue v-if="currentMenuId === 4" />
+      <backgroundColorAndAlphaVue v-if="currentMenuId === 5" />
+      <interactiveControlsVue v-if="currentMenuId === 6" />
+      <rotateModelVue v-if="currentMenuId === 7" />
+      <eventModelVue v-if="currentMenuId === 8" />
+      <lightModelVue v-if="currentMenuId === 9" />
+      <showFpsVue v-if="currentMenuId === 10" />
+      <cameraPositionAndRotateVue v-if="currentMenuId === 11" />
+      <processBarVue v-if="currentMenuId === 12" />
+      <parallelLoadModelsVue v-if="currentMenuId === 13" />
+      <addLabelVue v-if="currentMenuId === 14" />
+      <loadJsonModelVue v-if="currentMenuId === 15" />
+      <disableAnimationsVue v-if="currentMenuId === 16" />
+      <loaderDracoModelVue v-if="currentMenuId === 17" :lang="lang" />
+      <enableDampingVue v-if="currentMenuId === 18" />
+      <setVerticalHorizontal v-if="currentMenuId === 19" />
+      <enableAxesGrid v-if="currentMenuId === 20"/>
+      <minMaxDistance v-if="currentMenuId === 21"/>
+      <pointLightFollowCamera v-if="currentMenuId === 22" />
+      <cloneSameObj v-if="currentMenuId === 23" />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -105,9 +107,18 @@ function getMenuId(id: number) {
   currentMenuId.value = id;
 }
 </script>
-<style>
+
+<style lang="scss" scoped>
 .example {
   height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .container {
+    border: 1px solid #eee;
+  }
 }
 ul,
 li {
@@ -117,21 +128,22 @@ li {
 }
 li {
   padding: 8px 10px;
+  cursor: pointer;
 }
 li.active {
-  background-color: rgb(88, 88, 88);
+  background-color: #0073ff;
   text-decoration: underline;
 }
 li:hover {
-  background-color: rgb(88, 88, 88);
+  background-color: #0073ff;
   text-decoration: underline;
 }
 .menu {
   position: absolute;
-  right: 0;
-  top: 0;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 2;
-  opacity: 0.8;
   background-color: #000;
   color: #fff;
   text-align: left;

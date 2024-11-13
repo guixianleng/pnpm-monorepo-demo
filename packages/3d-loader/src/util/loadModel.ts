@@ -50,11 +50,7 @@ function getExtension(filePath: string): string {
 }
 
 // 如果需要启用 Draco 加载器
-function enableDraco(
-  isDraco: boolean,
-  loaderObj: LoaderObj,
-  dir: string = "assets/draco/gltf/"
-): void {
+function enableDraco(isDraco: boolean, loaderObj: LoaderObj, dir: string): void {
   if (isDraco) {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath(dir)
@@ -69,7 +65,7 @@ function getLoader(
   fileType = "",
   isDraco = false,
   plyMaterial: "MeshStandardMaterial" | "MeshBasicMaterial" = "MeshBasicMaterial",
-  dracoDir?: string
+  dracoDir: string
 ): LoaderObj | null {
   const fileExtension =
     fileType || getExtension(filePath) === "glb" ? "gltf" : getExtension(filePath)

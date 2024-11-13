@@ -24,16 +24,16 @@ import {
   Light,
   Group
 } from "three"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-import { onMounted, ref, watch, onBeforeUnmount } from "vue"
+import { onMounted, ref, watch, onBeforeUnmount, computed } from "vue"
 
-import { baseProps, baseEmits } from "./props"
+import { baseProps, baseEmits, BasePropsType } from "./props"
 import { getSize, getCenter, getLoader, getMTLLoader } from "./util/loadModel"
 import { generateCanvas } from "./util/helpers"
 import { useAssistHelper } from "./hooks/useAssistHelper"
 import { useAnimations } from "./hooks/useAnimations"
 import { useListenerEvents } from "./hooks/useListenerEvents"
 import { useProcess } from "./hooks/useOnprocess"
+import { useContrls } from "./hooks/useSetControls"
 
 const props = defineProps(baseProps)
 
@@ -46,7 +46,6 @@ let scene: Scene = new Scene()
 const camera = new PerspectiveCamera(45, 1, 0.1, 100000)
 const clock = new Clock()
 let renderer: WebGLRenderer = null as any
-let controls: OrbitControls = {} as any
 let allLights: Light[] = []
 let loader: any = null
 let requestAnimationId: number = 0
@@ -56,6 +55,10 @@ let textureLoader: any = null
 const objectPositionHasSet = ref(false)
 const containerElement = ref<HTMLElement | null>(null)
 const canvasElement = ref<HTMLCanvasElement>()
+
+const getProps = computed((): BasePropsType => {
+  return props
+})
 
 // 动画相关
 const { updateAnimate, isMultipleModels, playAnimations } = useAnimations({
@@ -75,6 +78,16 @@ const { size, onResize, addEventsLinstener, removeEventsListener } = useListener
 })
 // 处理加载进度
 const { loaderIndex, onProcess } = useProcess()
+// 控制器相关
+const {
+  updateControls,
+  initControls,
+  setVerticalHorizontalControls,
+  destroyControls,
+  controlsUpdate
+} = useContrls({
+  getProps
+})
 
 onMounted(() => {
   init()
@@ -201,10 +214,7 @@ function destroyScene() {
   if (renderer) {
     renderer.dispose()
   }
-  if (controls && Object.keys(controls).length > 0) {
-    controls.dispose()
-    controls = {} as any
-  }
+  destroyControls()
   // 移除事件监听器
   removeEventsListener()
   object = null
@@ -214,7 +224,7 @@ function destroyScene() {
 }
 
 function init() {
-  const { filePath, webGLRendererOptions, enableDamping, dampingFactor, labels } = props
+  const { filePath, webGLRendererOptions, labels } = props
 
   // 判断是否为多个模型
   if (filePath && Array.isArray(filePath)) {
@@ -222,7 +232,7 @@ function init() {
   }
 
   // 获取容器元素并设置样式
-  const el: any = containerElement.value
+  const el = containerElement.value as HTMLElement
   setContainerElementStyle(el)
 
   // 初始化画布尺寸
@@ -241,15 +251,7 @@ function init() {
     renderer.shadowMap.enabled = true
   }
 
-  if (!controls || Object.keys(controls).length <= 0) {
-    controls = new OrbitControls(camera, el)
-    if (enableDamping) {
-      controls.enableDamping = true
-      if (dampingFactor != undefined) {
-        controls.dampingFactor = dampingFactor
-      }
-    }
-  }
+  initControls(camera, el)
   setVerticalHorizontalControls()
   // 设置坐标轴和网格助手
   setAxesAndGridHelper(props, scene)
@@ -270,7 +272,7 @@ function getAllObject() {
   return isMultipleModels.value ? scene : object
 }
 
-function setContainerElementStyle(el: any) {
+function setContainerElementStyle(el: HTMLElement) {
   const { width, height } = props
   if (width) {
     el.style.width = `${width}px`
@@ -461,14 +463,6 @@ function updateLights() {
   })
 }
 
-// 更新控制器
-function updateControls() {
-  const { controlsOptions } = props
-  if (controlsOptions) {
-    Object.assign(controls, controlsOptions)
-  }
-}
-
 // 加载选择的模型
 function loadModelSelect() {
   const { filePath, parallelLoad } = props
@@ -649,7 +643,7 @@ function animate() {
   updateAnimate(delta)
 
   // 更新控制器
-  controls?.update()
+  controlsUpdate()
 
   render()
 }
@@ -802,41 +796,6 @@ function getObjectIndex(object: any) {
       .filter(i => i != undefined)[0]
   }
   return objIndex
-}
-
-// 设置垂直水平控件
-function setVerticalHorizontalControls() {
-  if (!controls) return
-
-  const { verticalCtrl, horizontalCtrl, minDistance, maxDistance } = props
-
-  // 设置垂直控制
-  if (verticalCtrl) {
-    if (typeof verticalCtrl === "boolean") {
-      controls.minAzimuthAngle = controls.maxAzimuthAngle = -2 * Math.PI
-    } else if (typeof verticalCtrl === "object") {
-      controls.minAzimuthAngle = verticalCtrl.min ?? -2 * Math.PI
-      controls.maxAzimuthAngle = verticalCtrl.max ?? 2 * Math.PI
-    }
-  }
-
-  // 设置水平控制
-  if (horizontalCtrl) {
-    if (typeof horizontalCtrl === "boolean") {
-      controls.minPolarAngle = controls.maxPolarAngle = 1
-    } else if (typeof horizontalCtrl === "object") {
-      controls.minPolarAngle = horizontalCtrl.min ?? 0
-      controls.maxPolarAngle = horizontalCtrl.max ?? Math.PI
-    }
-  }
-
-  // 设置距离限制
-  if (typeof minDistance === "number" && minDistance !== 0) {
-    controls.minDistance = minDistance
-  }
-  if (typeof maxDistance === "number" && maxDistance !== Infinity) {
-    controls.maxDistance = maxDistance
-  }
 }
 
 // 光源跟随相机

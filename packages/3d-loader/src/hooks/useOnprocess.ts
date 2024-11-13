@@ -6,7 +6,7 @@ interface IProcess {
   xhr: ProgressEvent
   isMultiple: boolean
   load: Fn
-  filePath: string | string[]
+  filePath: string[] | string
 }
 
 export function useProcess() {

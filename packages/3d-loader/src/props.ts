@@ -24,18 +24,18 @@ export const baseProps = {
   },
   // 位置，默认值为 { x: 0, y: 0, z: 0 }
   position: {
-    type: Object as PropType<ICoordinates | ICoordinates[]>,
-    default: () => ({ x: 0, y: 0, z: 0 })
+    type: Object as PropType<ICoordinates | ICoordinates[] | null>,
+    default: null
   },
   // 旋转，默认值为 { x: 0, y: 0, z: 0 }
   rotation: {
-    type: Object as PropType<ICoordinates | ICoordinates[]>,
-    default: () => ({ x: 0, y: 0, z: 0 })
+    type: Object as PropType<ICoordinates | ICoordinates[] | null>,
+    default: null
   },
   // 缩放，默认值为 { x: 1, y: 1, z: 1 }
   scale: {
-    type: Object as PropType<ICoordinates | ICoordinates[]>,
-    default: () => ({ x: 1, y: 1, z: 1 })
+    type: Object as PropType<ICoordinates | ICoordinates[] | null>,
+    default: null
   },
   // 灯光，默认值为包含一个环境光和一个平行光的数组
   lights: {
@@ -53,25 +53,25 @@ export const baseProps = {
       }
     ]
   },
-  // 摄像机位置，默认值为 { x: 0, y: 0, z: 5 }
+  // 摄像机位置
   cameraPosition: {
     type: Object as PropType<ICoordinates>,
-    default: () => ({ x: 0, y: 0, z: 5 })
-  },
-  // 摄像机旋转，默认值为 { x: 0, y: 0, z: 0 }
-  cameraRotation: {
-    type: Object as PropType<ICoordinates>,
     default: () => ({ x: 0, y: 0, z: 0 })
+  },
+  // 摄像机旋转
+  cameraRotation: {
+    type: Object as PropType<ICoordinates | null>,
+    default: null
   },
   // 摄像机“上”方向，默认值为 { x: 0, y: 1, z: 0 }
   cameraUp: {
-    type: Object as PropType<ICoordinates>,
-    default: () => ({ x: 0, y: 1, z: 0 })
+    type: Object as PropType<ICoordinates | null>,
+    default: null
   },
-  // 摄像机注视点，默认值为 { x: 0, y: 0, z: 0 }
+  // 摄像机注视点
   cameraLookAt: {
-    type: Object as PropType<ICoordinates>,
-    default: () => ({ x: 0, y: 0, z: 0 })
+    type: Object as PropType<ICoordinates | null>,
+    default: null
   },
   // 背景颜色，默认值为 0xffffff（白色）
   backgroundColor: {

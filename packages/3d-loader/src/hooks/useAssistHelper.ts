@@ -16,7 +16,7 @@ export function useAssistHelper({ ElRef }: IHelperContext) {
   // 设置坐标轴和网格助手
   function setAxesAndGridHelper(props: BasePropsType, scene: any) {
     const { enableAxesHelper, enableGridHelper, axesHelperSize } = props
-    // 如果启用坐标轴助手，则添加坐标轴
+    // 如果启用坐标轴助手，则添加坐标轴，红色为 X 轴，绿色为 Y 轴，蓝色为 Z 轴
     if (enableAxesHelper) {
       axesHelper = new AxesHelper(axesHelperSize)
       scene.add(axesHelper)
