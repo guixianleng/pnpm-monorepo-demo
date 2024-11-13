@@ -9,14 +9,14 @@ interface AnimateContext {
 }
 
 export function useAnimations({ getObject }: AnimateContext) {
-  const isMultipleModels = ref(false)
+  const multipleModel = ref(false)
 
   // 播放动画
   function playAnimations(autoPlay: boolean) {
     const obj = getObject() as Object3D
     if (!obj) return
 
-    if (isMultipleModels.value) {
+    if (multipleModel.value) {
       playMultiple(obj, autoPlay)
     } else {
       playSingle(obj, autoPlay)
@@ -58,7 +58,7 @@ export function useAnimations({ getObject }: AnimateContext) {
 
   return {
     playAnimations,
-    isMultipleModels,
+    multipleModel,
     updateAnimate
   }
 }

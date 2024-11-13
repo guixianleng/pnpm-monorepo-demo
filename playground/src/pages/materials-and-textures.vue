@@ -11,6 +11,7 @@
         :backgroundColor="item.backgroundColor"
         :outputEncoding="item.outputEncoding"
         :cameraPosition="item.cameraPosition"
+        @mousemove="onMouseMove"
       />
     </div>
   </div>

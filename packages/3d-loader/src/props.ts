@@ -110,7 +110,7 @@ export const baseProps = {
   },
   // 材质文件路径，默认值为空字符串
   mtlPath: {
-    type: String,
+    type: [String, Array] as PropType<string | string[]>,
     default: ""
   },
   // 是否显示 FPS，默认值为 false

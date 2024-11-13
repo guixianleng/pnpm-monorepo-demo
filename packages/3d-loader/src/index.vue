@@ -22,14 +22,15 @@ import {
 import { onMounted, ref, watch, onBeforeUnmount, computed } from "vue"
 
 import { baseProps, baseEmits, BasePropsType } from "./props"
-import { getSize, getCenter, getLoader, getMTLLoader } from "./util/loadModel"
-import { generateCanvas } from "./util/helpers"
+import { getSize, getCenter, getLoader } from "./util/loadModel"
+import { generateCanvas, isArray, isString } from "./util/helpers"
 import { useAssistHelper } from "./hooks/useAssistHelper"
 import { useAnimations } from "./hooks/useAnimations"
 import { useListenerEvents } from "./hooks/useListenerEvents"
 import { useProcess } from "./hooks/useOnprocess"
 import { useControls } from "./hooks/useSetControls"
 import { useLights } from "./hooks/useLights"
+import { useMaterialTexture } from "./hooks/useMaterialTexture"
 
 const props = defineProps(baseProps)
 
@@ -56,7 +57,7 @@ const getProps = computed((): BasePropsType => {
 })
 
 // 动画相关
-const { updateAnimate, isMultipleModels, playAnimations } = useAnimations({
+const { updateAnimate, multipleModel, playAnimations } = useAnimations({
   getObject: getAllObject
 })
 // 辅助、性能调试相关
@@ -140,7 +141,7 @@ watch(
       loadModelSelect()
     }
     if (valueArray[3]) {
-      clearWholeScene()
+      scene.clear()
     }
     if (valueArray[4] || valueArray[5]) {
       updateRenderer()
@@ -222,8 +223,8 @@ function init() {
   const { filePath, webGLRendererOptions, labels } = props
 
   // 判断是否为多个模型
-  if (filePath && Array.isArray(filePath)) {
-    isMultipleModels.value = true
+  if (filePath && isArray(filePath)) {
+    multipleModel.value = true
   }
 
   // 获取容器元素并设置样式
@@ -264,7 +265,7 @@ function init() {
 // 获取场景中的所有对象
 function getAllObject() {
   // 如果是多个模型，返回场景对象，否则返回单个对象
-  return isMultipleModels.value ? scene : object
+  return multipleModel.value ? scene : object
 }
 
 function setContainerElementStyle(el: HTMLElement) {
@@ -288,11 +289,11 @@ function update() {
 // 更新模型的位置信息、旋转信息和缩放信息
 function updateModel() {
   if (!object) return
-  const index = isMultipleModels.value ? getObjectIndex(object) : null
+  const index = multipleModel.value ? getObjectIndex(object) : null
   const { position, rotation, scale } = props
   if (position) {
     // 判断 position 是否为数组，若是数组则处理为多个模型的情况
-    if (position instanceof Array) {
+    if (isArray(position)) {
       // 如果是数组且存在索引，更新对应索引位置的模型位置，否则设置为默认位置 (0, 0, 0)
       if (index != null) {
         object.position.set(position[index].x, position[index].y, position[index].z)
@@ -307,7 +308,7 @@ function updateModel() {
 
   // 更新旋转
   if (rotation) {
-    if (rotation instanceof Array) {
+    if (isArray(rotation)) {
       if (index != null) {
         // 如果是数组且存在索引，更新对应索引位置的旋转
         object.rotation.set(rotation[index].x, rotation[index].y, rotation[index].z)
@@ -323,7 +324,7 @@ function updateModel() {
 
   // 更新缩放
   if (scale) {
-    if (scale instanceof Array) {
+    if (isArray(scale)) {
       if (index != null) {
         // 如果是数组且存在索引，更新对应索引位置的缩放
         object.scale.set(scale[index].x, scale[index].y, scale[index].z)
@@ -390,13 +391,11 @@ function updateCamera(isResize?: boolean) {
     camera.lookAt(new Vector3(cameraLookAt.x, cameraLookAt.y, cameraLookAt.z))
   }
 }
-// 更新光源
 
 // 加载选择的模型
 function loadModelSelect() {
   const { filePath, parallelLoad } = props
-  // If enable parallel load
-  if (parallelLoad && isMultipleModels.value) {
+  if (parallelLoad && multipleModel.value) {
     ;(filePath as any).forEach((path: string, index: number) => {
       // 根据模型索引加载模型
       load(index)
@@ -406,6 +405,7 @@ function loadModelSelect() {
     load()
   }
 }
+
 function load(fileIndex?: number) {
   const {
     filePath,
@@ -421,9 +421,8 @@ function load(fileIndex?: number) {
   const index = fileIndex || loaderIndex.value
 
   // 根据是否是多个模型，确定文件路径的类型
-  const filePathString: any = !isMultipleModels.value ? filePath : filePath[index]
-  const fileTypeString: string =
-    typeof fileType === "string" ? fileType : fileType ? fileType[index] : ""
+  const filePathString = (!multipleModel.value ? filePath : filePath[index]) as string
+  const fileTypeString = (isString(fileType) ? fileType : fileType[index]) as string
 
   // 获取加载器对象，包含 loader 和 getObject 等方法
   const loaderObject3d: any = getLoader(
@@ -447,22 +446,25 @@ function load(fileIndex?: number) {
     loader.setCrossOrigin(crossOrigin)
   }
 
+  const { loadMaterial } = useMaterialTexture({ getProps, loader, loadFilePath })
+
   // 如果存在 mtlPath，则加载材质
   if (mtlPath) {
     // load materials
     const isMultipleMTL = typeof mtlPath === "object"
     if (!isMultipleMTL) {
-      // 如果是单一材质，直接加载
-      loadMtl(filePathString, getObjectFun, index)
+      // single material
+      loadMaterial(filePathString, getObjectFun, index)
     } else {
+      // load materials and model
       if (!mtlPath[index]) {
         loadFilePath(filePathString, getObjectFun, index)
         return
       }
-      loadMtl(filePathString, getObjectFun, index)
+      loadMaterial(filePathString, getObjectFun, index)
     }
   } else {
-    // 如果没有材质，则直接加载模型
+    // don't load materials
     loadFilePath(filePathString, getObjectFun, index)
   }
 }
@@ -479,7 +481,7 @@ function loadFilePath(filePath: string, getObject: any, index: number) {
       addObject(object, filePath)
       // 如果需要加载纹理，设置纹理
       if (textureImage) {
-        const _texture = typeof textureImage === "string" ? textureImage : textureImage[index]
+        const _texture = isString(textureImage) ? textureImage : textureImage[index]
         if (_texture) {
           addTexture(object, _texture)
         }
@@ -491,7 +493,7 @@ function loadFilePath(filePath: string, getObject: any, index: number) {
       if (!parallelLoad) {
         onProcess({
           xhr: event,
-          isMultiple: isMultipleModels.value,
+          isMultiple: multipleModel.value,
           load,
           filePath: props.filePath
         })
@@ -505,31 +507,6 @@ function loadFilePath(filePath: string, getObject: any, index: number) {
   )
 }
 
-// 加载材质的函数
-function loadMtl(filePath: string, getObject: any, index: number) {
-  const { crossOrigin, requestHeader, mtlPath } = props
-
-  // 获取材质加载器
-  const mtlLoader = getMTLLoader()
-  if (crossOrigin) {
-    mtlLoader.setCrossOrigin(crossOrigin)
-  }
-  if (requestHeader) {
-    mtlLoader.setRequestHeader(requestHeader as any)
-  }
-
-  // 获取对应索引的材质路径
-  const mtl = typeof mtlPath === "string" ? mtlPath : mtlPath[index]
-  const mtlPathArray: any = /^(.*\/)([^/]*)$/.exec(mtl)
-  const path = mtlPathArray[1]
-  const file = mtlPathArray[2]
-  // 设置材质加载器的路径并加载材质
-  mtlLoader.setPath(path).load(file, (materials: any) => {
-    materials.preload()
-    loader.setMaterials(materials)
-    loadFilePath(filePath, getObject, index)
-  })
-}
 function getObject(object: any) {
   return object
 }
@@ -612,16 +589,11 @@ function addTexture(object: Object3D, texture: any) {
   })
 }
 
-// 清空场景
-function clearWholeScene() {
-  scene.clear()
-}
-
 // 设置对象的属性（例如位置、缩放、旋转等）
 function setObjectAttribute(type: string, val: any) {
   const obj = getAllObject()
   if (!obj) return
-  if (isMultipleModels.value) {
+  if (multipleModel.value) {
     obj.children.forEach((item: any) => {
       const index = getObjectIndex(item)
       const v = type === "scale" ? 1 : 0
@@ -638,7 +610,7 @@ function setSpriteLabel() {
   const { labels } = props
   if (!labels || labels.length <= 0) return
   clearSprite()
-  const obj = isMultipleModels.value ? scene : object
+  const obj = multipleModel.value ? scene : object
   const spriteImageLabel = (image: any) => {
     if (!textureLoader) {
       textureLoader = new TextureLoader()
@@ -715,7 +687,7 @@ function getObjectIndex(object: any) {
   let objIndex: any
 
   // 如果 filePath 是数组，则查找文件名匹配的索引
-  if (Array.isArray(filePath)) {
+  if (isArray(filePath)) {
     objIndex = filePath
       .map((item, index) => {
         if (item.indexOf(object.fileName) > -1) {
